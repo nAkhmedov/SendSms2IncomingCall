@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/contactPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_social_person"
+        android:contentDescription=""/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/block_contact_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/contactPhoto"
+        android:layout_toEndOf="@+id/contactPhoto"
+        android:layout_toLeftOf="@+id/deleteBlockButton"
+        android:layout_toStartOf="@+id/deleteBlockButton"
+        android:textDirection="rtl"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/block_contact_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/contactPhoto"
+        android:layout_toEndOf="@+id/contactPhoto"
+        android:layout_toLeftOf="@+id/deleteBlockButton"
+        android:layout_toStartOf="@+id/deleteBlockButton"
+        android:layout_below="@+id/block_contact_name"
+        android:textDirection="rtl"
+        android:text="TextView" />
+
+    <ImageButton
+        android:id="@+id/deleteBlockButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:focusable="false"
+        android:scaleType="center"
+        android:src="@drawable/ic_grey_cross"
+        android:layout_centerVertical="true"
+        android:visibility="visible"
+        android:contentDescription=""/>
+
+</RelativeLayout>

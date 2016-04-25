@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources
+    >
+    <string name="app_name">כרטיס ביקור דיגיטלי - יס פליז</string>
+    <string name="prompt_email">שם משתמש או מייל</string>
+    <string name="prompt_password">סיסמא</string>
+    <string name="action_sign_in">כניסה לשירות</string>
+    <string name="error_invalid_email">שם המשתמש או הסיסמא שגויים</string>
+    <string name="error_invalid_password">הסיסמא קצרה מידי</string>
+    <string name="error_incorrect_password">הסיסמא שגויה</string>
+    <string name="error_field_required">יש למלא שדה זה</string>
+    <string name="logout">התנתק</string>
+    <string name="show_reports">הצג דוחות</string>
+    <string name="edit_black_list">ערוך רשימת חסומים</string>
+    <string name="notify_send">עדכן אותי על שליחת כרטיס ביקור</string>
+    <string name="enable_service">הפעלת השירות</string>
+    <string name="add_from_contacts">הוסף מתוך אנשי קשר</string>
+    <string name="add_from_history">הוסף מתוך היסטוריית שיחות</string>
+    <string name="empty">הרשימה ריקה</string>
+    <string name="block_list">רשימת חסומים</string>
+    <string name="action_search">חיפוש</string>
+    <string name="ok">אישור</string>
+    <string name="sent_on">נשלח ב-</string>
+    <string name="contact_list">רשימת אנשי קשר</string>
+    <string name="history_calls">היסטוריית שיחות</string>
+    <string name="added_block">נוסף בהצלחה לרשימת החסומים</string>
+    <string name="already_was_block">כבר קיים ברשימת החסומים</string>
+    <string name="no_response">חשבונך לא פעיל או שם המשתמש והסיסמא לא נכונים. לפרטים התקשר ל 0773405500</string>
+    <string name="preference_file_key">com.sms.sendsms.PREFERENCE_FILE_KEY</string>
+    <string name="is_service_running">is_service_running</string>
+    <string name="is_enable_notifying">is_enable_notifying</string>
+    <string name="msg_sent">כרטיס ביקור דיגיטלי נשלח למספר </string>
+    <string name="error_msg">שגיאה. כרטיס ביקור דיגיטלי לא נשלח.</string>
+    <string name="no_service">שגיאה בשירות.</string>
+    <string name="error_pdu">Error Null PDU.</string>
+    <string name="radio_off">Error Radio off.</string>
+    <string name="unknown_error_sent_msg">כרטיס ביקור לא נשלח בגלל תקלה לא ידועה</string>
+</resources>

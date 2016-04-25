@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">כרטיס ביקור דיגיטלי - יס פליז</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="logout">Log out</string>
+    <string name="show_reports">Show reports</string>
+    <string name="edit_black_list">Edit block list</string>
+    <string name="notify_send">Notify sending</string>
+    <string name="enable_service">Enable service</string>
+    <string name="preference_file_key">com.sms.sendsms.PREFERENCE_FILE_KEY</string>
+    <string name="is_service_running">is_service_running</string>
+    <string name="is_enable_notifying">is_enable_notifying</string>
+    <string name="add_from_contacts">Add from contacts</string>
+    <string name="add_from_history">Add from history</string>
+    <string name="empty">Empty</string>
+    <string name="block_list">Block list</string>
+    <string name="action_search">Search</string>
+    <string name="ok">OK</string>
+    <string name="sent_on">Sent on</string>
+    <string name="contact_list">Contact list</string>
+    <string name="history_calls">History calls</string>
+    <string name="added_block">is successfully added to BlockUser</string>
+    <string name="already_was_block">is already in Block user list</string>
+    <string name="no_response">Couldn\'t login no response by server</string>
+    <string name="msg_sent">Message sent to number</string>
+    <string name="error_msg">Error message not sent.</string>
+    <string name="no_service">Error No service.</string>
+    <string name="error_pdu">Error Null PDU.</string>
+    <string name="radio_off">Error Radio off.</string>
+    <string name="unknown_error_sent_msg">Message not sent cause of unknown result</string>
+</resources>

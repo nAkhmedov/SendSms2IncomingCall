@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:key="pref_screen_root"
+                  android:icon="@mipmap/ic_launcher">
+
+    <PreferenceCategory
+        android:key="business_cat"
+        android:title="@string/business">
+
+        <EditTextPreference
+            android:key="business_name"
+            android:hint="@string/type_here"
+            android:title="@string/business_name"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="business_color_code"
+            android:title="Color reference"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <yuku.ambilwarna.widget.AmbilWarnaPreference
+            android:key="your_preference_key"
+            android:defaultValue="0x6699cc"
+            app:supportsAlpha="false"
+            android:title="Pick a color" />
+
+        <CheckBoxPreference
+            android:key="if_business_name"
+            android:title="@string/show"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/logo"
+        android:title="@string/logo">
+
+        <EditTextPreference
+            android:key="logo_name"
+            android:hint="@string/type_here"
+            android:title="@string/logo_name"/>
+
+        <Preference
+            android:key="logo_file"
+            android:title="@string/choose_file"
+            android:summary="File name"/>
+
+        <CheckBoxPreference
+            android:key="if_logo"
+            android:title="@string/show"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="bg_img"
+        android:title="@string/bg_img">
+
+        <EditTextPreference
+            android:key="bg_text"
+            android:hint="@string/type_here"
+            android:title="@string/bg_text"/>
+
+        <Preference
+            android:key="bg_img_file"
+            android:title="@string/choose_file"
+            android:summary="File name"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="bg_color"
+        android:title="@string/bg_color">
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="bg_color_code"
+            android:title="@string/bg_color"
+            app:colorpicker_defaultColor="#f00"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="color_header"
+        android:title="@string/header">
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="header_color_code"
+            android:title="@string/header"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <CheckBoxPreference
+            android:key="show_color_header"
+            android:title="@string/show_color"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="color_footer"
+        android:title="@string/footer">
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="footer_color_code"
+            android:title="@string/footer"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <CheckBoxPreference
+            android:key="show_color_footer"
+            android:title="@string/show_color"
+            android:defaultValue="true"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="color_icons_code"
+            android:title="@string/color_icons"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="color_bg_icons_code"
+            android:title="@string/bg_icons"
+            app:colorpicker_defaultColor="#f00"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="main_label_txt"
+        android:title="@string/main_label_txt">
+
+        <EditTextPreference
+            android:key="label_text"
+            android:hint="@string/type_here"
+            android:title="@string/label_text"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="color_label_txt_code"
+            android:title="@string/color"
+            app:colorpicker_defaultColor="#f00"/>
+    </PreferenceCategory>
+</PreferenceScreen>

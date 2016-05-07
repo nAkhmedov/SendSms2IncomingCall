@@ -8,10 +8,12 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
@@ -43,6 +45,7 @@ public class MainActivity extends Activity {
         Switch toggleNtf = (Switch) findViewById(R.id.toggle_ntf);
         Switch toggleService = (Switch) findViewById(R.id.toggle_service);
         Button logOutBtn = (Button) findViewById(R.id.log_out);
+        TextView preview = (TextView) findViewById(R.id.preview);
         toggleNtf.setChecked(sharedPref.getBoolean(getString(R.string.is_enable_notifying), true));
         toggleService.setChecked(ServiceDetector.isSmsServiceRunning(this));
 
@@ -69,6 +72,8 @@ public class MainActivity extends Activity {
                 logout();
             }
         });
+
+        preview.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void toggleService(boolean isEnabled) {
@@ -154,4 +159,8 @@ public class MainActivity extends Activity {
             logout();
         }
     };
+
+    public void showEditCard(View view) {
+        startActivity(new Intent(MainActivity.this, EditCardActivity.class));
+    }
 }

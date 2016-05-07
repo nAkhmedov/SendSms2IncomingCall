@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 RestAdapter restAdapter = new RestAdapter.Builder()
-                        .setEndpoint(ContextConstants.AUTH_URL)
+                        .setEndpoint(ContextConstants.APP_URL)
 //                        .setLogLevel(RestAdapter.LogLevel.FULL)
                         .setConverter(new StringConverter())
                         .build();

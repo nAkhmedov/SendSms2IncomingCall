@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:key="pref_screen_root"
+                  android:icon="@mipmap/ic_launcher">
+
+    <PreferenceCategory
+        android:key="general"
+        android:title="@string/general">
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="reset_label_color"
+            android:title="@string/color"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="reset_icon_color"
+            android:title="@string/color_icons"
+            app:colorpicker_defaultColor="#f00"/>
+    </PreferenceCategory>
+</PreferenceScreen>

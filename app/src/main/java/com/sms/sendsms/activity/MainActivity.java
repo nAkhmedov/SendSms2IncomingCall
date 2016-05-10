@@ -1,39 +1,51 @@
 package com.sms.sendsms.activity;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
 import com.sms.sendsms.constants.ActionNames;
+import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.User;
 import com.sms.sendsms.service.SendSmsService;
+import com.sms.sendsms.util.ReportHelper;
 import com.sms.sendsms.util.ServiceDetector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by Navruz on 29.03.2016.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
     public static boolean IS_ACTIVITY_ALIVE = false;
 
     private SharedPreferences sharedPref;
+    private RelativeLayout mainLayout;
+    private ReportHelper reportHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +54,7 @@ public class MainActivity extends Activity {
 
         sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
         Switch toggleNtf = (Switch) findViewById(R.id.toggle_ntf);
         Switch toggleService = (Switch) findViewById(R.id.toggle_service);
         Button logOutBtn = (Button) findViewById(R.id.log_out);
@@ -74,6 +87,23 @@ public class MainActivity extends Activity {
         });
 
         preview.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_send_report: {
+                sendReport();
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void toggleService(boolean isEnabled) {
@@ -162,5 +192,31 @@ public class MainActivity extends Activity {
 
     public void showEditCard(View view) {
         startActivity(new Intent(MainActivity.this, EditCardActivity.class));
+    }
+
+    private void sendReport() {
+        reportHelper = new ReportHelper(ApplicationLoader.getAppContext());
+        try {
+            final File reportFile = reportHelper.createReport();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("message/rfc822");
+            intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"info@yesplease.co.il"});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Hi there");
+            intent.putExtra(Intent.EXTRA_TEXT   , "Feedback");
+            intent.putExtra(Intent.EXTRA_STREAM   , Uri.parse("file://" + reportFile));
+            startActivityForResult(Intent.createChooser(intent, "Send report..."), ContextConstants.REPORT_REQUEST_CODE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Snackbar.make(mainLayout, getString(R.string.no_mail_client), Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ContextConstants.REPORT_REQUEST_CODE) {
+            LOGGER.info("Deleted created report file");
+            reportHelper.deleteReportDir();
+        }
     }
 }

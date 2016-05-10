@@ -9,4 +9,5 @@ public class ContextConstants {
     public static final String PHONE_NUMBER_FORMAT_F = "05";
     public static final String PHONE_NUMBER_FORMAT_S = "+9725";
     public static final long DAY_PERIOD = 3;
+    public static final int REPORT_REQUEST_CODE = 527;
 }

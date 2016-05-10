@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:key="pref_screen_root"
+                  android:icon="@mipmap/ic_launcher">
+
+    <PreferenceCategory
+        android:key="color_header"
+        android:title="@string/header">
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="header_color_code"
+            android:title="@string/header"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <CheckBoxPreference
+            android:key="show_color_header"
+            android:title="@string/show_color"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

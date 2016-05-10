@@ -101,4 +101,8 @@
     <string name="general">כללי</string>
     <string name="edit_card">ערוך כרטיס</string>
     <string name="preview"><a href="http://www.yes-please.co.il/card/13933">תצוגה מקדימה</a></string>
+    <string name="menu_send_report">Send report</string>
+    <string name="no_mail_client">There are no email clients installed.</string>
+    <string name="card_items">Card items.</string>
+    <string name="update">עדכן</string>
 </resources>

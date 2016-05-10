@@ -101,4 +101,8 @@
     <string name="general">General</string>
     <string name="edit_card">Edit card</string>
     <string name="preview"><a href="http://www.yes-please.co.il/card/13933">Preview</a></string>
+    <string name="menu_send_report">Send report</string>
+    <string name="no_mail_client">There are no email clients installed.</string>
+    <string name="card_items">Card items.</string>
+    <string name="update">Update</string>
 </resources>

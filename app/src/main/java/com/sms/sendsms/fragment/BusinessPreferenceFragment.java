@@ -25,15 +25,11 @@ import com.sms.sendsms.execution.CustomHTTPService;
 /**
  * Created by Navruz on 25.04.2016.
  */
-public class BusinessPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+public class BusinessPreferenceFragment extends PreferenceFragment {
 
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
 
-
-    private EditTextPreference businessName;
-    private ColorPreference businessNameColor;
-    private CheckBoxPreference ifBusinessName;
 
     private EditTextPreference logoName;
     private Preference logoFile;
@@ -149,7 +145,7 @@ public class BusinessPreferenceFragment extends PreferenceFragment implements Pr
         super.onCreate(savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        addPreferencesFromResource(R.xml.pref_content);
+        addPreferencesFromResource(R.xml.main_pref_content);
         addPreferencesFromResource(R.xml.general_pref_content);
         addPreferencesFromResource(R.xml.mail_pref_content);
         addPreferencesFromResource(R.xml.fb_pref_content);
@@ -166,11 +162,6 @@ public class BusinessPreferenceFragment extends PreferenceFragment implements Pr
         addPreferencesFromResource(R.xml.chat_pref_content);
         addPreferencesFromResource(R.xml.android_app_pref_content);
         addPreferencesFromResource(R.xml.save_contact_pref_content);
-
-        //Business item
-        businessName = (EditTextPreference) findPreference("business_name");
-        businessNameColor = (ColorPreference) findPreference("business_color_code");
-        ifBusinessName = (CheckBoxPreference) findPreference("if_business_name");
 
         //Logo item
         logoName = (EditTextPreference) findPreference("logo_name");
@@ -312,11 +303,7 @@ public class BusinessPreferenceFragment extends PreferenceFragment implements Pr
 
     private void setNewValues(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "business_name": {
-                String businessText = sharedPreferences.getString("business_name", " ");
-                businessName.setSummary(businessText);
-                break;
-            }
+
             case "logo_name": {
                 String logoText = sharedPreferences.getString("logo_name", "");
                 logoName.setSummary(logoText);
@@ -475,157 +462,10 @@ public class BusinessPreferenceFragment extends PreferenceFragment implements Pr
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        sendRequest2Data();
-    }
 
-    private void sendRequest2Data() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(ContextConstants.APP_URL)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .build();
-        CustomHTTPService http = restAdapter.create(CustomHTTPService.class);
-        http.sendBusinessDetailRequest("13933", new Callback<JsonObject>() {
-            @Override
-            public void success(JsonObject jsonObject, Response response) {
-                if (jsonObject != null && !jsonObject.entrySet().isEmpty()) {
-                    parseJson(jsonObject);
-                } else {
-
-                }
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                int i = 0;
-                i++;
-            }
-        });
-    }
-
-    private void parseJson(final JsonObject jsonObject) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Business business = new Business();
-                business.setStoreCode(jsonObject.get("storecode").getAsString());
-                business.setBusinessName(jsonObject.get("businessname").getAsString());
-                business.setLogo(jsonObject.get("logo").getAsString());
-                business.setBackgroundImage(jsonObject.get("backgroundimage").getAsString());
-                business.setBackgroundColor(jsonObject.get("backgroundcolor").getAsString());
-                business.setCustomHeaderColor(jsonObject.get("headercolor").getAsString());
-                business.setFooterColor(jsonObject.get("footercolor").getAsString());
-                business.setIfLogo(jsonObject.get("iflogo").getAsBoolean());
-                business.setIfMail(jsonObject.get("ifmail").getAsBoolean());
-                business.setIfFacebook(jsonObject.get("iffacebook").getAsBoolean());
-                business.setIfTwitter(jsonObject.get("iftwitter").getAsBoolean());
-                business.setIfLinkedin(jsonObject.get("iflinkedin").getAsBoolean());
-                business.setIfGoogleplus(jsonObject.get("ifgoogleplus").getAsBoolean());
-                business.setIfYoutube(jsonObject.get("ifyoutube").getAsBoolean());
-                business.setIfPhone(jsonObject.get("ifphone").getAsBoolean());
-                business.setIfGallery(jsonObject.get("ifgallery").getAsBoolean());
-                business.setIfAbout(jsonObject.get("ifabout").getAsBoolean());
-                business.setIfWebsite(jsonObject.get("ifwebsite").getAsBoolean());
-                business.setIfMap(jsonObject.get("ifmap").getAsBoolean());
-                business.setIfPinterest(jsonObject.get("ifpinterest").getAsBoolean());
-                business.setIfAndroid(jsonObject.get("ifandroid").getAsBoolean());
-                business.setMainText(jsonObject.get("maintext").getAsString());
-                business.setMailIconColor(jsonObject.get("mail_icon_color").getAsString());
-                business.setMailLabelColor(jsonObject.get("mail_label_color").getAsString());
-                business.setMailLabel(jsonObject.get("mail_label").getAsString());
-                business.setFacebookIconColor(jsonObject.get("facebook_icon_color").getAsString());
-                business.setFacebookLabelColor(jsonObject.get("facebook_label_color").getAsString());
-                business.setFacebookLabel(jsonObject.get("facebook_label").getAsString());
-                business.setTwitterIconColor(jsonObject.get("twitter_icon_color").getAsString());
-                business.setTwitterLabelColor(jsonObject.get("twitter_label_color").getAsString());
-                business.setTwitterLabel(jsonObject.get("twitter_label").getAsString());
-                business.setLinkedinIconColor(jsonObject.get("linkedin_icon_color").getAsString());
-                business.setLinkedinLabelColor(jsonObject.get("linkedin_label_color").getAsString());
-                business.setLinkedinLabel(jsonObject.get("linkedin_label").getAsString());
-                business.setGoogleplusIconColor(jsonObject.get("googleplus_icon_color").getAsString());
-                business.setGoogleplusLabelColor(jsonObject.get("googleplus_label_color").getAsString());
-                business.setGoogleplusLabel(jsonObject.get("googleplus_label").getAsString());
-                business.setMailAddress(jsonObject.get("mail_address").getAsString());
-                business.setFacebookAddress(jsonObject.get("facebook_address").getAsString());
-                business.setTwitterAddress(jsonObject.get("twitter_address").getAsString());
-                business.setLinkedinAddress(jsonObject.get("linkedin_address").getAsString());
-                business.setGoogleplusAddress(jsonObject.get("googleplus_address").getAsString());
-                business.setYoutubeIconColor(jsonObject.get("youtube_icon_color").getAsString());
-                business.setYoutubeLabelColor(jsonObject.get("youtube_label_color").getAsString());
-                business.setYoutubeLabel(jsonObject.get("youtube_label").getAsString());
-                business.setYoutubeAddress(jsonObject.get("youtube_address").getAsString());
-                business.setPhoneLabelColor(jsonObject.get("phone_label_color").getAsString());
-                business.setPhoneIconColor(jsonObject.get("phone_icon_color").getAsString());
-                business.setPhoneLabel(jsonObject.get("phone_label").getAsString());
-                business.setPhoneAddress(jsonObject.get("phone_address").getAsString());
-                business.setGalleryIconColor(jsonObject.get("gallery_icon_color").getAsString());
-                business.setGalleryLabelColor(jsonObject.get("gallery_label_color").getAsString());
-                business.setGalleryLabel(jsonObject.get("gallery_label").getAsString());
-                business.setGalleryAddress(jsonObject.get("gallery_address").getAsString());
-                business.setAboutIconColor(jsonObject.get("about_icon_color").getAsString());
-                business.setAboutLabelColor(jsonObject.get("about_label_color").getAsString());
-                business.setAboutLabel(jsonObject.get("about_label").getAsString());
-                business.setAboutAddress(jsonObject.get("about_address").getAsString());
-                business.setWebsiteIconColor(jsonObject.get("website_icon_color").getAsString());
-                business.setWebsiteLabelColor(jsonObject.get("website_label_color").getAsString());
-                business.setWebsiteLabel(jsonObject.get("website_label").getAsString());
-                business.setWebsiteAddress(jsonObject.get("website_address").getAsString());
-                business.setMapIconColor(jsonObject.get("map_icon_color").getAsString());
-                business.setMapLabelColor(jsonObject.get("map_label_color").getAsString());
-                business.setMapLabel(jsonObject.get("map_label").getAsString());
-                business.setMapAddress(jsonObject.get("map_address").getAsString());
-                business.setPinterestIconColor(jsonObject.get("pinterest_icon_color").getAsString());
-                business.setPinterestLabelColor(jsonObject.get("pinterest_label_color").getAsString());
-                business.setPinterestLabel(jsonObject.get("pinterest_label").getAsString());
-                business.setPinterestAddress(jsonObject.get("pinterest_address").getAsString());
-                business.setAndroidIconColor(jsonObject.get("android_icon_color").getAsString());
-                business.setAndroidLabelColor(jsonObject.get("android_label_color").getAsString());
-                business.setAndroidLabel(jsonObject.get("android_label").getAsString());
-                business.setAndroidAddress(jsonObject.get("android_address").getAsString());
-                business.setIfBusinessname(jsonObject.get("ifbusinessname").getAsBoolean());
-                business.setBusinessnameColor(jsonObject.get("businessname_color").getAsString());
-                business.setMaintextColor(jsonObject.get("maintext_color").getAsString());
-                business.setIfFooter(jsonObject.get("iffooter").getAsBoolean());
-                business.setIfHeader(jsonObject.get("ifheader").getAsBoolean());
-                business.setIfUserplus(jsonObject.get("ifuserplus").getAsBoolean());
-                business.setUserplusIconColor(jsonObject.get("userplus_icon_color").getAsString());
-                business.setUserplusLabelColor(jsonObject.get("userplus_label_color").getAsString());
-                business.setUserplusLabel(jsonObject.get("userplus_label").getAsString());
-                business.setBitly(jsonObject.get("bitly").getAsString());
-                business.setMaskyoo(jsonObject.get("maskyoo").getAsString());
-                business.setActive(jsonObject.get("active").getAsBoolean());
-                business.setAboutTextColor(jsonObject.get("about_text_color").getAsString());
-                business.setFooterIconsColor(jsonObject.get("footer_icons_color").getAsString());
-                business.setFooterIconsBackground(jsonObject.get("footer_icons_background").getAsString());
-                business.setRealPhone(jsonObject.get("realphone").getAsString());
-                business.setMonthlySms(jsonObject.get("monthlysms").getAsInt());
-                business.setChatIconColor(jsonObject.get("chat_icon_color").getAsString());
-                business.setChatLabelColor(jsonObject.get("chat_label_color").getAsString());
-                business.setChatLabel(jsonObject.get("chat_label").getAsString());
-                business.setIfChat(jsonObject.get("ifchat").getAsBoolean());
-                business.setTest(jsonObject.get("test").getAsInt());
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        fillUiWithData(business);
-                    }
-                });
-            }
-        }).start();
-    }
 
     private void fillUiWithData(Business business) {
         Log.i("TAG", "business" + business.toString());
-//        prefs.edit().putString("business_name", business.getBusinessName()).apply();
-//        businessName.setPersistent(true);
-        businessName.setText(business.getBusinessName());
-        businessName.setSummary(business.getBusinessName());
-//        businessNameColor.setColor(Color.parseColor(business.getBusinessnameColor()));
-        ifBusinessName.setChecked(business.getIfBusinessname());
 
 //        logoName.setSummary(business.getLogo());
         logoFile.setSummary(business.getLogo());
@@ -661,16 +501,16 @@ public class BusinessPreferenceFragment extends PreferenceFragment implements Pr
 
         twtAddress.setText(business.getFacebookAddress());
         twtAddress.setSummary(business.getFacebookAddress());
-        twtLabelColor.setColor(Color.parseColor(business.getFacebookLabelColor()));
-        twtIconColor.setColor(Color.parseColor(business.getFacebookIconColor()));
+        twtLabelColor.setColor(Color.parseColor(business.getTwitterLabelColor()));
+        twtIconColor.setColor(Color.parseColor(business.getTwitterIconColor()));
         twtLabel.setText(business.getFacebookLabel());
         twtLabel.setSummary(business.getFacebookLabel());
         ifTwitter.setChecked(business.getIfFacebook());
 
         linkedAddress.setText(business.getFacebookAddress());
         linkedAddress.setSummary(business.getFacebookAddress());
-        linkedLabelColor.setColor(Color.parseColor(business.getFacebookLabelColor()));
-        linkedIconColor.setColor(Color.parseColor(business.getFacebookIconColor()));
+        linkedLabelColor.setColor(Color.parseColor(business.getLinkedinLabelColor()));
+        linkedIconColor.setColor(Color.parseColor(business.getLinkedinIconColor()));
         linkedLabel.setText(business.getFacebookLabel());
         linkedLabel.setSummary(business.getFacebookLabel());
         ifLinkedIn.setChecked(business.getIfFacebook());
@@ -759,24 +599,5 @@ public class BusinessPreferenceFragment extends PreferenceFragment implements Pr
         userPlusLabel.setText(business.getUserplusLabel());
         userPlusLabel.setSummary(business.getUserplusLabel());
         ifUserPlus.setChecked(business.getIfUserplus());
-    }
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-        return false;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (prefs != null)
-            prefs.registerOnSharedPreferenceChangeListener(listener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (prefs != null)
-            prefs.unregisterOnSharedPreferenceChangeListener(listener);
     }
 }

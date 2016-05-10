@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:key="pref_screen_root"
+                  android:icon="@mipmap/ic_launcher">
+
+    <PreferenceCategory
+        android:key="a_card_items"
+        android:title="@string/card_items">
+
+        <Preference
+            android:key="a_bus_name"
+            android:enabled="true"
+            android:title="@string/business_name"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_bg_img"
+            android:title="@string/bg_img"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_bg_color"
+            android:title="@string/bg_color"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_header"
+            android:title="@string/header"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_footer"
+            android:title="@string/footer"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_main_label_txt"
+            android:title="@string/main_label_txt"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_general"
+            android:title="@string/general"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_mail"
+            android:title="@string/mail"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_facebook"
+            android:title="@string/facebook"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_twitter"
+            android:title="@string/twitter"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_linked_in"
+            android:title="@string/linked_in"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_google_plus"
+            android:title="@string/google_plus"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_youtube"
+            android:title="@string/youtube"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_phone"
+            android:title="@string/phone"
+            android:icon="@android:drawable/ic_dialog_dialer"/>
+
+        <Preference
+            android:key="a_gallery"
+            android:title="@string/gallery"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_about"
+            android:title="@string/about"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_website"
+            android:title="@string/website"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_map"
+            android:title="@string/map"
+            android:icon="@android:drawable/ic_menu_mapmode"/>
+
+        <Preference
+            android:key="a_pinterest"
+            android:title="@string/pinterest"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_chat"
+            android:title="@string/chat"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_android_app"
+            android:title="@string/android_app"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_user_plus"
+            android:title="@string/user_plus"
+            android:icon="@android:drawable/ic_menu_send"/>
+    </PreferenceCategory>
+</PreferenceScreen>

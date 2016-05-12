@@ -19,7 +19,8 @@ public class SchemaGenerator {
     public static void main(String[] args) throws Exception {
         List<SchemaVersion> versions = new ArrayList<SchemaVersion>();
 
-        versions.add(new Version1(true));
+        versions.add(new Version1(false));
+        versions.add(new Version2(true));
 
         verifySchemas(versions);
 

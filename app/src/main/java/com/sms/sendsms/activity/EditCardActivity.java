@@ -10,9 +10,6 @@ import com.sms.sendsms.fragment.MainCardPreference;
 
 public  class EditCardActivity extends AppCompatActivity {
 
-    public static SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private SharedPreferences prefs = null;
-
     private final static String TAG_FRAGMENT_MAIN_CARD = "TAG_FRAGMENT_MAIN_CARD";
     public static long businessId;
 
@@ -20,28 +17,12 @@ public  class EditCardActivity extends AppCompatActivity {
     protected  void onCreate ( Bundle savedInstanceState )  {
         super.onCreate (savedInstanceState);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new MainCardPreference(), TAG_FRAGMENT_MAIN_CARD)
                 .commit();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (prefs != null)
-            prefs.registerOnSharedPreferenceChangeListener(listener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (prefs != null)
-            prefs.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     @Override

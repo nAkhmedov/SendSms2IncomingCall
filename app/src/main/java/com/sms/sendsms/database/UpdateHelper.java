@@ -3,6 +3,8 @@ package com.sms.sendsms.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.sms.sendsms.database.migration.MigrationV1ToV2;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +26,8 @@ public class UpdateHelper extends DaoMaster.OpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (newVersion) {
             case 2:
-//                new MigrationV1ToV2().applyMigration(db, oldVersion);
-//                break;
+                new MigrationV1ToV2().applyMigration(db, oldVersion);
+                break;
             default:
                 break;
         }

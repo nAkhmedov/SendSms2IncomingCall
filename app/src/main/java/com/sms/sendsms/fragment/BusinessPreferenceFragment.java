@@ -10,17 +10,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
 import com.rarepebble.colorpicker.ColorPreference;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import com.sms.sendsms.R;
-import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
-import com.sms.sendsms.execution.CustomHTTPService;
 
 /**
  * Created by Navruz on 25.04.2016.

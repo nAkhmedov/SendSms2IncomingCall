@@ -15,15 +15,21 @@ import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
 import com.sms.sendsms.execution.CustomHTTPService;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Navruz on 10.05.2016.
  */
 public class MainCardPreference extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainCardPreference.class);
 
     private final static String TAG_FRAGMENT_BUS_CARD = "TAG_FRAGMENT_BUS_CARD";
 
@@ -33,7 +39,49 @@ public class MainCardPreference extends PreferenceFragment implements Preference
         setHasOptionsMenu(true);
         addPreferencesFromResource(R.xml.main_pref_content);
         Preference businessPref = findPreference("a_bus_name");
+        Preference bgImgPref = findPreference("a_bg_img");
+        Preference bgColorPref = findPreference("a_bg_color");
+        Preference headerPref = findPreference("a_header");
+        Preference footerPref = findPreference("a_footer");
+        Preference mainLabelTxtPref = findPreference("a_main_label_txt");
+        Preference generalPref = findPreference("a_general");
+        Preference mailPref = findPreference("a_mail");
+        Preference facebookPref = findPreference("a_facebook");
+        Preference twitterPref = findPreference("a_twitter");
+        Preference linkedInPref = findPreference("a_linked_in");
+        Preference googlePlusPref = findPreference("a_google_plus");
+        Preference youtubePref = findPreference("a_youtube");
+        Preference phonePref = findPreference("a_phone");
+        Preference galleryPref = findPreference("a_gallery");
+        Preference aboutPref = findPreference("a_about");
+        Preference websitePref = findPreference("a_website");
+        Preference mapPref = findPreference("a_map");
+        Preference pinterestPref = findPreference("a_pinterest");
+        Preference chatPref = findPreference("a_chat");
+        Preference androidAppPref = findPreference("a_android_app");
+        Preference userPlusPref = findPreference("a_user_plus");
         businessPref.setOnPreferenceClickListener(this);
+        bgImgPref.setOnPreferenceClickListener(this);
+        bgColorPref.setOnPreferenceClickListener(this);
+        headerPref.setOnPreferenceClickListener(this);
+        footerPref.setOnPreferenceClickListener(this);
+        mainLabelTxtPref.setOnPreferenceClickListener(this);
+        generalPref.setOnPreferenceClickListener(this);
+        mailPref.setOnPreferenceClickListener(this);
+        facebookPref.setOnPreferenceClickListener(this);
+        twitterPref.setOnPreferenceClickListener(this);
+        linkedInPref.setOnPreferenceClickListener(this);
+        googlePlusPref.setOnPreferenceClickListener(this);
+        youtubePref.setOnPreferenceClickListener(this);
+        phonePref.setOnPreferenceClickListener(this);
+        galleryPref.setOnPreferenceClickListener(this);
+        aboutPref.setOnPreferenceClickListener(this);
+        websitePref.setOnPreferenceClickListener(this);
+        mapPref.setOnPreferenceClickListener(this);
+        pinterestPref.setOnPreferenceClickListener(this);
+        chatPref.setOnPreferenceClickListener(this);
+        androidAppPref.setOnPreferenceClickListener(this);
+        userPlusPref.setOnPreferenceClickListener(this);
         sendRequest2Data();
     }
 
@@ -54,24 +102,26 @@ public class MainCardPreference extends PreferenceFragment implements Preference
     }
 
     private void sendRequest2Data() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(ContextConstants.APP_URL)
-//                .setLogLevel(RestAdapter.LogLevel.FULL)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ContextConstants.APP_URL)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        CustomHTTPService http = restAdapter.create(CustomHTTPService.class);
-        http.sendBusinessDetailRequest("13933", new Callback<JsonObject>() {
+        CustomHTTPService http = retrofit.create(CustomHTTPService.class);
+        http.sendBusinessDetailRequest("13933").enqueue(new Callback<JsonObject>() {
             @Override
-            public void success(JsonObject jsonObject, Response response) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject jsonObject = response.body();
                 if (jsonObject != null && !jsonObject.entrySet().isEmpty()) {
                     parseJson(jsonObject);
                 } else {
 
                 }
-
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Call<JsonObject> call, Throwable error) {
+                LOGGER.error("Exception = " + error.getMessage());
+                error.printStackTrace();
             }
         });
     }
@@ -181,7 +231,7 @@ public class MainCardPreference extends PreferenceFragment implements Preference
                 long id = ApplicationLoader.getApplication(getActivity())
                         .getDaoSession()
                         .getBusinessDao()
-                        .insert(business);
+                        .insertOrReplace(business);
                 EditCardActivity.businessId = id;
             }
         }).start();

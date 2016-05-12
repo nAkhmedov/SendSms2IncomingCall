@@ -18,21 +18,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.User;
 import com.sms.sendsms.execution.CustomHTTPService;
 import com.sms.sendsms.service.SendSmsService;
-import com.sms.sendsms.util.StringConverter;
+import com.sms.sendsms.util.NullOnEmptyConverterFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A login screen that offers login via email/password.
@@ -138,28 +143,41 @@ public class LoginActivity extends AppCompatActivity {
 //            mAuthTask.execute((Void) null);
 
             try {
-                RestAdapter restAdapter = new RestAdapter.Builder()
-                        .setEndpoint(ContextConstants.APP_URL)
-//                        .setLogLevel(RestAdapter.LogLevel.FULL)
-                        .setConverter(new StringConverter())
+                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+                OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(interceptor)
+                    .build();
+
+                Gson gson = new GsonBuilder()
+                        .setLenient()
+                        .create();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(ContextConstants.APP_URL)
+                        .addConverterFactory(new NullOnEmptyConverterFactory())
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .client(client)
                         .build();
 
-                http = restAdapter.create(CustomHTTPService.class);
+                http = retrofit.create(CustomHTTPService.class);
+
                 LOGGER.info("Send login request");
-                http.sendAuthRequest(email, password, new Callback<String>() {
+                http.sendAuthRequest(email, password).enqueue(new Callback<String>() {
                     @Override
-                    public void success(String resultValue, Response response) {
-                        if (resultValue == null || resultValue.isEmpty()) {
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        String body = response.body();
+                        if (!response.isSuccessful() || body == null) {
                             showProgress(false);
-                            LOGGER.error("ERROR: resultValue = " + resultValue);
+                            LOGGER.error("ERROR: resultValue = " + response);
                             showMessage(getString(R.string.no_response));
                             return;
                         }
-                        final String resultCode = resultValue.trim();
-                        http.sendMessageBodyRequest("getsms", resultCode, new Callback<String>() {
+                        final String resultCode = body.trim();
+                        http.sendMessageBodyRequest("getsms", resultCode).enqueue(new Callback<String>() {
                             @Override
-                            public void success(String jsonPrimitive, Response response) {
-                                String messageBody = jsonPrimitive;
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                String messageBody = response.body();
                                 if (messageBody == null || messageBody.isEmpty()) {
                                     messageBody = "Empty string by server";
                                 }
@@ -173,11 +191,10 @@ public class LoginActivity extends AppCompatActivity {
                                         .getUserDao()
                                         .insert(user);
                                 startMainActivity();
-
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
+                            public void onFailure(Call<String> call, Throwable error) {
                                 showProgress(false);
                                 LOGGER.error("ERROR: Auth getMessageBody content = " + error + " messageError = " + error.getMessage());
                                 showMessage(error.getMessage());
@@ -187,16 +204,18 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void onFailure(Call<String> call, Throwable err) {
                         showProgress(false);
-                        showMessage(error.getMessage());
-                        LOGGER.error("ERROR: auth user = " + error.getMessage());
-                        error.printStackTrace();
+                        showMessage(getString(R.string.no_response));
+                        LOGGER.error("ERROR: auth user = " + err.getMessage());
+                        err.printStackTrace();
                     }
                 });
-            } catch (Exception e) {
-                LOGGER.error("Error " + e.getMessage());
-                e.printStackTrace();
+            } catch (Exception err) {
+                showProgress(false);
+                showMessage(err.getMessage());
+                LOGGER.error("Error " + err.getMessage());
+                err.printStackTrace();
             }
         }
     }

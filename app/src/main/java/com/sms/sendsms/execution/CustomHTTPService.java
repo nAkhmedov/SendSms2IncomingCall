@@ -2,21 +2,28 @@ package com.sms.sendsms.execution;
 
 import com.google.gson.JsonObject;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by Navruz on 22.08.2015.
  */
 public interface CustomHTTPService {
 
-    @GET("/login.asp")
-    void sendAuthRequest(@Query("username") String username, @Query("password") String password, Callback<String> response);
+    @GET("login.asp")
+    Call<String> sendAuthRequest(@Query("username") String username, @Query("password") String password);
 
-    @GET("/login.asp")
-    void sendMessageBodyRequest(@Query("action") String action, @Query("code") String code, Callback<String> response);
+    @GET("login.asp")
+    Call<String> sendMessageBodyRequest(@Query("action") String action, @Query("code") String code);
 
-    @GET("/read.asp")
-    void sendBusinessDetailRequest(@Query("code") String code, Callback<JsonObject> response);
+    @GET("read.asp")
+    Call<JsonObject> sendBusinessDetailRequest(@Query("code") String code);
+
+    @FormUrlEncoded
+    @POST("write.asp")
+    Call<String> sendCardData(@Query("code") String code, @Field("businessname") String businessname);
 }

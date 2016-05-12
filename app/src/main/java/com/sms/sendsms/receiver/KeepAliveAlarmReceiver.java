@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
 import com.sms.sendsms.activity.LoginActivity;
@@ -16,7 +18,6 @@ import com.sms.sendsms.database.User;
 import com.sms.sendsms.execution.CustomHTTPService;
 import com.sms.sendsms.service.SendSmsService;
 import com.sms.sendsms.util.DateUtil;
-import com.sms.sendsms.util.StringConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 import java.util.Date;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Navruz on 19.04.2016.
@@ -51,18 +53,20 @@ public class KeepAliveAlarmReceiver extends BroadcastReceiver {
                 .queryBuilder()
                 .unique();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(ContextConstants.APP_URL)
-//                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setConverter(new StringConverter())
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ContextConstants.APP_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         LOGGER.info("Sending getsms request...");
-        CustomHTTPService http = restAdapter.create(CustomHTTPService.class);
-        http.sendMessageBodyRequest("getsms", user.getMessageCode(), new Callback<String>() {
+        CustomHTTPService http = retrofit.create(CustomHTTPService.class);
+        http.sendMessageBodyRequest("getsms", user.getMessageCode()).enqueue(new Callback<String>() {
             @Override
-            public void success(String jsonPrimitive, Response response) {
-                String messageBody = jsonPrimitive;
+            public void onResponse(Call<String> call, Response<String> response) {
+                String messageBody = response.body();
                 if (messageBody == null || messageBody.isEmpty()) {
                     LOGGER.info("Disabled date = " + user.getDisabledDate());
                     if (user.getDisabledDate() == null) {
@@ -84,11 +88,10 @@ public class KeepAliveAlarmReceiver extends BroadcastReceiver {
                         .getDaoSession()
                         .getUserDao()
                         .update(user);
-
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Call<String> call, Throwable error) {
                 LOGGER.error("ERROR: getMessageBody content = " + error + " messageError = " + error.getMessage());
                 error.printStackTrace();
             }

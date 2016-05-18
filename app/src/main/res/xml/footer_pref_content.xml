@@ -10,23 +10,29 @@
         android:title="@string/footer">
 
         <com.rarepebble.colorpicker.ColorPreference
-            android:key="footer_color_code"
-            android:title="@string/footer"
+            android:key="footercolor"
+            android:title="@string/color_footer"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="footer_icons_color"
+            android:title="@string/color_icons"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
+            app:colorpicker_defaultColor="#f00"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="footer_icons_background"
+            android:title="@string/bg_icons"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
             app:colorpicker_defaultColor="#f00"/>
 
         <CheckBoxPreference
-            android:key="show_color_footer"
-            android:title="@string/show_color"
+            android:key="iffooter"
+            android:title="@string/show"
             android:defaultValue="true"/>
-
-        <com.rarepebble.colorpicker.ColorPreference
-            android:key="color_icons_code"
-            android:title="@string/color_icons"
-            app:colorpicker_defaultColor="#f00"/>
-
-        <com.rarepebble.colorpicker.ColorPreference
-            android:key="color_bg_icons_code"
-            android:title="@string/bg_icons"
-            app:colorpicker_defaultColor="#f00"/>
     </PreferenceCategory>
 </PreferenceScreen>

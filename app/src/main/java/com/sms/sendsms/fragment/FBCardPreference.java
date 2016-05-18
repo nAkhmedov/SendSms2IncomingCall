@@ -21,36 +21,44 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Navruz on 10.05.2016.
  */
-public class BusinessCardPreference extends PreferenceFragment {
+public class FBCardPreference extends PreferenceFragment {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FBCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
 
-    private EditTextPreference businessName;
-    private ColorPreference businessNameColor;
-    private CheckBoxPreference ifBusinessName;
+    private EditTextPreference fbAddress;
+    private ColorPreference fbLabelColor;
+    private ColorPreference fbIconColor;
+    private EditTextPreference fbLabel;
+    private CheckBoxPreference ifFacebook;
+
     private Business business;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.business_pref_content);
+        addPreferencesFromResource(R.xml.fb_pref_content);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         business = EditCardActivity.business;
 
-        //Business item
-        businessName = (EditTextPreference) findPreference("businessname");
-        businessNameColor = (ColorPreference) findPreference("businessname_color");
-        ifBusinessName = (CheckBoxPreference) findPreference("ifbusinessname");
+        //Facebook item
+        fbAddress = (EditTextPreference) findPreference("facebook_address");
+        fbLabelColor = (ColorPreference) findPreference("facebook_label_color");
+        fbIconColor = (ColorPreference) findPreference("facebook_icon_color");
+        fbLabel = (EditTextPreference) findPreference("facebook_label");
+        ifFacebook = (CheckBoxPreference) findPreference("iffacebook");
 
-        businessName.setText(business.getBusinessName());
-        businessName.setSummary(business.getBusinessName());
-        businessNameColor.setColor(Color.parseColor(business.getBusinessnameColor()));
-        ifBusinessName.setChecked(business.getIfBusinessname());
+        fbAddress.setText(business.getFacebookAddress());
+        fbAddress.setSummary(business.getFacebookAddress());
+        fbLabelColor.setColor(Color.parseColor(business.getFacebookLabelColor()));
+        fbIconColor.setColor(Color.parseColor(business.getFacebookIconColor()));
+        fbLabel.setText(business.getFacebookLabel());
+        fbLabel.setSummary(business.getFacebookLabel());
+        ifFacebook.setChecked(business.getIfFacebook());
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -62,22 +70,34 @@ public class BusinessCardPreference extends PreferenceFragment {
 
     private void setNewValues(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "businessname": {
-                String businessText = sharedPreferences.getString(key, " ");
-                businessName.setSummary(businessText);
-                ((EditCardActivity) getActivity()).updateCard(key, businessText);
+            case "facebook_address": {
+                String addressValue = sharedPreferences.getString(key, "");
+                fbAddress.setSummary(addressValue);
+                ((EditCardActivity) getActivity()).updateCard(key, addressValue);
                 break;
             }
-            case "businessname_color": {
+            case "facebook_label_color": {
                 int colorValue = sharedPreferences.getInt(key, 0);
                 String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
                 ((EditCardActivity) getActivity()).updateCard(key, hexColor);
                 break;
             }
-            case "ifbusinessname": {
-                boolean ifBusiness = sharedPreferences.getBoolean(key, false);
-                ifBusinessName.setChecked(ifBusiness);
-                ((EditCardActivity) getActivity()).updateCard(key, ifBusiness);
+            case "facebook_icon_color": {
+                int colorValue = sharedPreferences.getInt(key, 0);
+                String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
+                ((EditCardActivity) getActivity()).updateCard(key, hexColor);
+                break;
+            }
+            case "facebook_label": {
+                String labelValue = sharedPreferences.getString(key, "");
+                fbLabel.setSummary(labelValue);
+                ((EditCardActivity) getActivity()).updateCard(key, labelValue);
+                break;
+            }
+            case "iffacebook": {
+                boolean ifValue = sharedPreferences.getBoolean(key, false);
+                ifFacebook.setChecked(ifValue);
+                ((EditCardActivity) getActivity()).updateCard(key, ifValue);
                 break;
             }
         }

@@ -9,13 +9,17 @@
         android:key="bg_img"
         android:title="@string/bg_img">
 
-        <EditTextPreference
-            android:key="bg_text"
-            android:hint="@string/type_here"
-            android:title="@string/bg_text"/>
+        <!--<EditTextPreference-->
+            <!--android:key="bg_text"-->
+            <!--android:hint="@string/type_here"-->
+            <!--android:title="@string/bg_text"/>-->
 
         <Preference
-            android:key="bg_img_file"
+            android:key="backgroundimage"
+            android:title="@string/file_name"/>
+
+        <Preference
+            android:key="backgroundimage_base64"
             android:title="@string/choose_file"
             android:summary="File name"/>
     </PreferenceCategory>

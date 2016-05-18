@@ -9,18 +9,18 @@
         android:key="@string/logo"
         android:title="@string/logo">
 
-        <EditTextPreference
-            android:key="logo_name"
-            android:hint="@string/type_here"
-            android:title="@string/logo_name"/>
+        <!--<EditTextPreference-->
+            <!--android:key="logo_name"-->
+            <!--android:hint="@string/type_here"-->
+            <!--android:title="@string/logo_name"/>-->
 
         <Preference
-            android:key="logo_file"
+            android:key="logo"
             android:title="@string/choose_file"
             android:summary="File name"/>
 
         <CheckBoxPreference
-            android:key="if_logo"
+            android:key="iflogo"
             android:title="@string/show"
             android:defaultValue="false"/>
     </PreferenceCategory>

@@ -10,8 +10,10 @@
         android:title="@string/bg_color">
 
         <com.rarepebble.colorpicker.ColorPreference
-            android:key="bg_color_code"
-            android:title="@string/bg_color"
+            android:key="backgroundcolor"
+            android:title="@string/color"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
             app:colorpicker_defaultColor="#f00"/>
     </PreferenceCategory>
 </PreferenceScreen>

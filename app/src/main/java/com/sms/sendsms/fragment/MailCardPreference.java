@@ -21,36 +21,44 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Navruz on 10.05.2016.
  */
-public class BusinessCardPreference extends PreferenceFragment {
+public class MailCardPreference extends PreferenceFragment {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
 
-    private EditTextPreference businessName;
-    private ColorPreference businessNameColor;
-    private CheckBoxPreference ifBusinessName;
+    private EditTextPreference mailAddress;
+    private ColorPreference mailColor;
+    private ColorPreference mailIconColor;
+    private EditTextPreference mailLabel;
+    private CheckBoxPreference ifMail;
+
     private Business business;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.business_pref_content);
+        addPreferencesFromResource(R.xml.mail_pref_content);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         business = EditCardActivity.business;
 
-        //Business item
-        businessName = (EditTextPreference) findPreference("businessname");
-        businessNameColor = (ColorPreference) findPreference("businessname_color");
-        ifBusinessName = (CheckBoxPreference) findPreference("ifbusinessname");
+        //Mail item
+        mailAddress = (EditTextPreference) findPreference("mail_address");
+        mailColor = (ColorPreference) findPreference("mail_label_color");
+        mailIconColor = (ColorPreference) findPreference("mail_icon_color");
+        mailLabel = (EditTextPreference) findPreference("mail_label");
+        ifMail = (CheckBoxPreference) findPreference("ifmail");
 
-        businessName.setText(business.getBusinessName());
-        businessName.setSummary(business.getBusinessName());
-        businessNameColor.setColor(Color.parseColor(business.getBusinessnameColor()));
-        ifBusinessName.setChecked(business.getIfBusinessname());
+        mailAddress.setText(business.getMailAddress());
+        mailAddress.setSummary(business.getMailAddress());
+        mailColor.setColor(Color.parseColor(business.getMailLabelColor()));
+        mailIconColor.setColor(Color.parseColor(business.getMailIconColor()));
+        mailLabel.setText(business.getMailLabel());
+        mailLabel.setSummary(business.getMailLabel());
+        ifMail.setChecked(business.getIfMail());
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -62,22 +70,34 @@ public class BusinessCardPreference extends PreferenceFragment {
 
     private void setNewValues(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "businessname": {
-                String businessText = sharedPreferences.getString(key, " ");
-                businessName.setSummary(businessText);
-                ((EditCardActivity) getActivity()).updateCard(key, businessText);
+            case "mail_address": {
+                String addressValue = sharedPreferences.getString(key, "");
+                mailAddress.setSummary(addressValue);
+                ((EditCardActivity) getActivity()).updateCard(key, addressValue);
                 break;
             }
-            case "businessname_color": {
+            case "mail_label_color": {
                 int colorValue = sharedPreferences.getInt(key, 0);
                 String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
                 ((EditCardActivity) getActivity()).updateCard(key, hexColor);
                 break;
             }
-            case "ifbusinessname": {
-                boolean ifBusiness = sharedPreferences.getBoolean(key, false);
-                ifBusinessName.setChecked(ifBusiness);
-                ((EditCardActivity) getActivity()).updateCard(key, ifBusiness);
+            case "mail_icon_color": {
+                int colorValue = sharedPreferences.getInt(key, 0);
+                String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
+                ((EditCardActivity) getActivity()).updateCard(key, hexColor);
+                break;
+            }
+            case "mail_label": {
+                String mailLabelValue = sharedPreferences.getString(key, "");
+                mailLabel.setSummary(mailLabelValue);
+                ((EditCardActivity) getActivity()).updateCard(key, mailLabelValue);
+                break;
+            }
+            case "ifmail": {
+                boolean ifMailValue = sharedPreferences.getBoolean(key, false);
+                ifMail.setChecked(ifMailValue);
+                ((EditCardActivity) getActivity()).updateCard(key, ifMailValue);
                 break;
             }
         }

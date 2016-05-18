@@ -1,16 +1,13 @@
 package com.sms.sendsms.fragment;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
-import com.google.gson.JsonObject;
-import com.rarepebble.colorpicker.ColorPreference;
 import com.sms.sendsms.R;
 import com.sms.sendsms.activity.EditCardActivity;
 import com.sms.sendsms.database.Business;
@@ -19,38 +16,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by Navruz on 10.05.2016.
+ * Created by Navruz on 17.05.2016.
  */
-public class BusinessCardPreference extends PreferenceFragment {
+public class LogoCardPreference extends PreferenceFragment {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
 
-    private EditTextPreference businessName;
-    private ColorPreference businessNameColor;
-    private CheckBoxPreference ifBusinessName;
+    private Preference logoFile;
+    private CheckBoxPreference ifLogo;
     private Business business;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.business_pref_content);
+        addPreferencesFromResource(R.xml.logo_pref_content);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         business = EditCardActivity.business;
 
-        //Business item
-        businessName = (EditTextPreference) findPreference("businessname");
-        businessNameColor = (ColorPreference) findPreference("businessname_color");
-        ifBusinessName = (CheckBoxPreference) findPreference("ifbusinessname");
+        //Logo item
+        logoFile = findPreference("logo");
+        ifLogo = (CheckBoxPreference) findPreference("iflogo");
 
-        businessName.setText(business.getBusinessName());
-        businessName.setSummary(business.getBusinessName());
-        businessNameColor.setColor(Color.parseColor(business.getBusinessnameColor()));
-        ifBusinessName.setChecked(business.getIfBusinessname());
+        //        logoName.setSummary(business.getLogo());
+        logoFile.setSummary(business.getLogo());
+        ifLogo.setChecked(business.getIfLogo());
+
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -62,22 +57,10 @@ public class BusinessCardPreference extends PreferenceFragment {
 
     private void setNewValues(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "businessname": {
-                String businessText = sharedPreferences.getString(key, " ");
-                businessName.setSummary(businessText);
-                ((EditCardActivity) getActivity()).updateCard(key, businessText);
-                break;
-            }
-            case "businessname_color": {
-                int colorValue = sharedPreferences.getInt(key, 0);
-                String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
-                ((EditCardActivity) getActivity()).updateCard(key, hexColor);
-                break;
-            }
-            case "ifbusinessname": {
-                boolean ifBusiness = sharedPreferences.getBoolean(key, false);
-                ifBusinessName.setChecked(ifBusiness);
-                ((EditCardActivity) getActivity()).updateCard(key, ifBusiness);
+            case "iflogo": {
+                boolean ifValue = sharedPreferences.getBoolean(key, false);
+                ifLogo.setChecked(ifValue);
+                ((EditCardActivity) getActivity()).updateCard(key, ifValue);
                 break;
             }
         }

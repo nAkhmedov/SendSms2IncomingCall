@@ -10,27 +10,31 @@
         android:title="@string/twitter">
 
         <EditTextPreference
-            android:key="twt_address"
+            android:key="twitter_address"
             android:hint="@string/type_here"
             android:title="@string/twt_address"/>
 
         <com.rarepebble.colorpicker.ColorPreference
-            android:key="twt_label_color"
+            android:key="twitter_label_color"
             android:title="@string/color"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
             app:colorpicker_defaultColor="#f00"/>
 
         <com.rarepebble.colorpicker.ColorPreference
-            android:key="twt_icon_color"
+            android:key="twitter_icon_color"
             android:title="@string/color_icons"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
             app:colorpicker_defaultColor="#f00"/>
 
         <EditTextPreference
-            android:key="twt_label"
+            android:key="twitter_label"
             android:hint="@string/type_here"
             android:title="@string/twt_label"/>
 
         <CheckBoxPreference
-            android:key="if_twitter"
+            android:key="iftwitter"
             android:title="@string/show"
             android:defaultValue="false"/>
     </PreferenceCategory>

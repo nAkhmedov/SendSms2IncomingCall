@@ -111,6 +111,8 @@ public class MigrationV1ToV2 extends MigrationImpl {
 
         Log.i("CHECKING", "EXECUTED VERSION 2");
 
+        db.execSQL("ALTER TABLE user ADD COLUMN guid TEXT NOT NULL;");
+
         db.setTransactionSuccessful();
         db.endTransaction();
 

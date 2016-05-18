@@ -10,23 +10,19 @@
         android:title="@string/business">
 
         <EditTextPreference
-            android:key="business_name"
+            android:key="businessname"
             android:hint="@string/type_here"
             android:title="@string/business_name"/>
 
         <com.rarepebble.colorpicker.ColorPreference
-            android:key="business_color_code"
-            android:title="Color reference"
+            android:key="businessname_color"
+            android:title="@string/color"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
             app:colorpicker_defaultColor="#f00"/>
 
-        <yuku.ambilwarna.widget.AmbilWarnaPreference
-            android:key="your_preference_key"
-            android:defaultValue="0x6699cc"
-            app:supportsAlpha="false"
-            android:title="Pick a color" />
-
         <CheckBoxPreference
-            android:key="if_business_name"
+            android:key="ifbusinessname"
             android:title="@string/show"
             android:defaultValue="false"/>
 

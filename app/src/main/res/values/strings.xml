@@ -45,9 +45,9 @@
     <string name="bg_img">Background image</string>
     <string name="bg_text">Background text</string>
     <string name="bg_color">Background color</string>
-    <string name="header">Color Header</string>
+    <string name="header">Header</string>
     <string name="show_color">Show Color</string>
-    <string name="footer">Color Footer</string>
+    <string name="footer">Footer</string>
     <string name="color_icons">Color Icons</string>
     <string name="bg_icons">Background Icons</string>
     <string name="main_label_txt">Text in main label</string>
@@ -105,4 +105,9 @@
     <string name="no_mail_client">There are no email clients installed.</string>
     <string name="card_items">Card items.</string>
     <string name="update">Update</string>
+    <string name="color_footer">Color Footer</string>
+    <string name="color_header">Color Header</string>
+    <string name="reset_label_color">Reset all label color</string>
+    <string name="reset_icon_color">Reset all color icons</string>
+    <string name="file_name">File name</string>
 </resources>

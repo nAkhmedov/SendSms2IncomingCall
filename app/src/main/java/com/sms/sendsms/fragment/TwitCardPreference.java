@@ -21,36 +21,44 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Navruz on 10.05.2016.
  */
-public class BusinessCardPreference extends PreferenceFragment {
+public class TwitCardPreference extends PreferenceFragment {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TwitCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
 
-    private EditTextPreference businessName;
-    private ColorPreference businessNameColor;
-    private CheckBoxPreference ifBusinessName;
+    private EditTextPreference twtAddress;
+    private ColorPreference twtLabelColor;
+    private ColorPreference twtIconColor;
+    private EditTextPreference twtLabel;
+    private CheckBoxPreference ifTwitter;
+
     private Business business;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.business_pref_content);
+        addPreferencesFromResource(R.xml.twitter_pref_content);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         business = EditCardActivity.business;
 
-        //Business item
-        businessName = (EditTextPreference) findPreference("businessname");
-        businessNameColor = (ColorPreference) findPreference("businessname_color");
-        ifBusinessName = (CheckBoxPreference) findPreference("ifbusinessname");
+        //Twitter item
+        twtAddress = (EditTextPreference) findPreference("twitter_address");
+        twtLabelColor = (ColorPreference) findPreference("twitter_label_color");
+        twtIconColor = (ColorPreference) findPreference("twitter_icon_color");
+        twtLabel = (EditTextPreference) findPreference("twitter_label");
+        ifTwitter = (CheckBoxPreference) findPreference("iftwitter");
 
-        businessName.setText(business.getBusinessName());
-        businessName.setSummary(business.getBusinessName());
-        businessNameColor.setColor(Color.parseColor(business.getBusinessnameColor()));
-        ifBusinessName.setChecked(business.getIfBusinessname());
+        twtAddress.setText(business.getTwitterAddress());
+        twtAddress.setSummary(business.getTwitterAddress());
+        twtLabelColor.setColor(Color.parseColor(business.getTwitterLabelColor()));
+        twtIconColor.setColor(Color.parseColor(business.getTwitterIconColor()));
+        twtLabel.setText(business.getTwitterLabel());
+        twtLabel.setSummary(business.getTwitterLabel());
+        ifTwitter.setChecked(business.getIfTwitter());
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -62,22 +70,34 @@ public class BusinessCardPreference extends PreferenceFragment {
 
     private void setNewValues(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "businessname": {
-                String businessText = sharedPreferences.getString(key, " ");
-                businessName.setSummary(businessText);
-                ((EditCardActivity) getActivity()).updateCard(key, businessText);
+            case "twitter_address": {
+                String addressValue = sharedPreferences.getString(key, "");
+                twtAddress.setSummary(addressValue);
+                ((EditCardActivity) getActivity()).updateCard(key, addressValue);
                 break;
             }
-            case "businessname_color": {
+            case "twitter_label_color": {
                 int colorValue = sharedPreferences.getInt(key, 0);
                 String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
                 ((EditCardActivity) getActivity()).updateCard(key, hexColor);
                 break;
             }
-            case "ifbusinessname": {
-                boolean ifBusiness = sharedPreferences.getBoolean(key, false);
-                ifBusinessName.setChecked(ifBusiness);
-                ((EditCardActivity) getActivity()).updateCard(key, ifBusiness);
+            case "twitter_icon_color": {
+                int colorValue = sharedPreferences.getInt(key, 0);
+                String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
+                ((EditCardActivity) getActivity()).updateCard(key, hexColor);
+                break;
+            }
+            case "twitter_label": {
+                String labelValue = sharedPreferences.getString(key, "");
+                twtLabel.setSummary(labelValue);
+                ((EditCardActivity) getActivity()).updateCard(key, labelValue);
+                break;
+            }
+            case "iftwitter": {
+                boolean ifValue = sharedPreferences.getBoolean(key, false);
+                ifTwitter.setChecked(ifValue);
+                ((EditCardActivity) getActivity()).updateCard(key, ifValue);
                 break;
             }
         }

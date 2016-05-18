@@ -10,9 +10,19 @@
         android:title="@string/card_items">
 
         <Preference
+            android:key="a_general"
+            android:title="@string/general"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
             android:key="a_bus_name"
             android:enabled="true"
             android:title="@string/business_name"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_logo"
+            android:title="@string/logo"
             android:icon="@android:drawable/ic_menu_send"/>
 
         <Preference
@@ -41,8 +51,18 @@
             android:icon="@android:drawable/ic_menu_send"/>
 
         <Preference
-            android:key="a_general"
-            android:title="@string/general"
+            android:key="a_about"
+            android:title="@string/about"
+            android:icon="@android:drawable/ic_menu_send"/>
+
+        <Preference
+            android:key="a_phone"
+            android:title="@string/phone"
+            android:icon="@android:drawable/ic_dialog_dialer"/>
+
+        <Preference
+            android:key="a_user_plus"
+            android:title="@string/user_plus"
             android:icon="@android:drawable/ic_menu_send"/>
 
         <Preference
@@ -76,18 +96,8 @@
             android:icon="@android:drawable/ic_menu_send"/>
 
         <Preference
-            android:key="a_phone"
-            android:title="@string/phone"
-            android:icon="@android:drawable/ic_dialog_dialer"/>
-
-        <Preference
             android:key="a_gallery"
             android:title="@string/gallery"
-            android:icon="@android:drawable/ic_menu_send"/>
-
-        <Preference
-            android:key="a_about"
-            android:title="@string/about"
             android:icon="@android:drawable/ic_menu_send"/>
 
         <Preference
@@ -113,11 +123,6 @@
         <Preference
             android:key="a_android_app"
             android:title="@string/android_app"
-            android:icon="@android:drawable/ic_menu_send"/>
-
-        <Preference
-            android:key="a_user_plus"
-            android:title="@string/user_plus"
             android:icon="@android:drawable/ic_menu_send"/>
     </PreferenceCategory>
 </PreferenceScreen>

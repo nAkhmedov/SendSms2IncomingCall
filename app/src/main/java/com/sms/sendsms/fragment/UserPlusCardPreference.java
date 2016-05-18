@@ -21,36 +21,40 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Navruz on 10.05.2016.
  */
-public class BusinessCardPreference extends PreferenceFragment {
+public class UserPlusCardPreference extends PreferenceFragment {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserPlusCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
 
-    private EditTextPreference businessName;
-    private ColorPreference businessNameColor;
-    private CheckBoxPreference ifBusinessName;
+    private ColorPreference userPlusLabelColor;
+    private ColorPreference userPlusIconColor;
+    private EditTextPreference userPlusLabel;
+    private CheckBoxPreference ifUserPlus;
+
     private Business business;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.business_pref_content);
+        addPreferencesFromResource(R.xml.save_contact_pref_content);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         business = EditCardActivity.business;
 
-        //Business item
-        businessName = (EditTextPreference) findPreference("businessname");
-        businessNameColor = (ColorPreference) findPreference("businessname_color");
-        ifBusinessName = (CheckBoxPreference) findPreference("ifbusinessname");
+        //Save Contact item
+        userPlusLabelColor = (ColorPreference) findPreference("userplus_label_color");
+        userPlusIconColor = (ColorPreference) findPreference("userplus_icon_color");
+        userPlusLabel = (EditTextPreference) findPreference("userplus_label");
+        ifUserPlus = (CheckBoxPreference) findPreference("ifuserplus");
 
-        businessName.setText(business.getBusinessName());
-        businessName.setSummary(business.getBusinessName());
-        businessNameColor.setColor(Color.parseColor(business.getBusinessnameColor()));
-        ifBusinessName.setChecked(business.getIfBusinessname());
+        userPlusLabelColor.setColor(Color.parseColor(business.getUserplusLabelColor()));
+        userPlusIconColor.setColor(Color.parseColor(business.getUserplusIconColor()));
+        userPlusLabel.setText(business.getUserplusLabel());
+        userPlusLabel.setSummary(business.getUserplusLabel());
+        ifUserPlus.setChecked(business.getIfUserplus());
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -62,22 +66,28 @@ public class BusinessCardPreference extends PreferenceFragment {
 
     private void setNewValues(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "businessname": {
-                String businessText = sharedPreferences.getString(key, " ");
-                businessName.setSummary(businessText);
-                ((EditCardActivity) getActivity()).updateCard(key, businessText);
-                break;
-            }
-            case "businessname_color": {
+            case "userplus_label_color": {
                 int colorValue = sharedPreferences.getInt(key, 0);
                 String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
                 ((EditCardActivity) getActivity()).updateCard(key, hexColor);
                 break;
             }
-            case "ifbusinessname": {
-                boolean ifBusiness = sharedPreferences.getBoolean(key, false);
-                ifBusinessName.setChecked(ifBusiness);
-                ((EditCardActivity) getActivity()).updateCard(key, ifBusiness);
+            case "userplus_icon_color": {
+                int colorValue = sharedPreferences.getInt(key, 0);
+                String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));
+                ((EditCardActivity) getActivity()).updateCard(key, hexColor);
+                break;
+            }
+            case "userplus_label": {
+                String labelValue = sharedPreferences.getString(key, "");
+                userPlusLabel.setSummary(labelValue);
+                ((EditCardActivity) getActivity()).updateCard(key, labelValue);
+                break;
+            }
+            case "ifuserplus": {
+                boolean ifValue = sharedPreferences.getBoolean(key, false);
+                ifUserPlus.setChecked(ifValue);
+                ((EditCardActivity) getActivity()).updateCard(key, ifValue);
                 break;
             }
         }

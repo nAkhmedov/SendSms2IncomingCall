@@ -163,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                 http = retrofit.create(CustomHTTPService.class);
 
                 LOGGER.info("Send login request");
-                http.sendAuthRequest(email, password).enqueue(new Callback<String>() {
+                http.sendAuthRequest(email, password, "newlogin").enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         String body = response.body();
@@ -173,7 +173,9 @@ public class LoginActivity extends AppCompatActivity {
                             showMessage(getString(R.string.no_response));
                             return;
                         }
-                        final String resultCode = body.trim();
+                        final String[] result = body.trim().split("\\|");
+                        final String resultCode = result[0];
+                        final String guid = result[1];
                         http.sendMessageBodyRequest("getsms", resultCode).enqueue(new Callback<String>() {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
@@ -186,6 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                                 user.setPassword(password);
                                 user.setMessageCode(resultCode);
                                 user.setMessageBody(messageBody);
+                                user.setGuid(guid);
                                 ApplicationLoader.getApplication(LoginActivity.this)
                                         .getDaoSession()
                                         .getUserDao()

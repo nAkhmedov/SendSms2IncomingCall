@@ -37,6 +37,9 @@ public class Version2 extends SchemaVersion {
                 .notNull();
         account.addDateProperty("disabledDate")
                 .columnName("disabled_date");
+        account.addStringProperty("guid")
+                .columnName("guid")
+                .notNull();
 //        account.addStringProperty("firstName")
 //            .columnName("firstname");
 //        account.addStringProperty("lastName")

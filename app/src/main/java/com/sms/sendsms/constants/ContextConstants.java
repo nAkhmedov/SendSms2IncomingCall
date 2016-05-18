@@ -10,4 +10,29 @@ public class ContextConstants {
     public static final String PHONE_NUMBER_FORMAT_S = "+9725";
     public static final long DAY_PERIOD = 3;
     public static final int REPORT_REQUEST_CODE = 527;
+    public static final int SELECT_BG_PHOTO = 528;
+
+    public final static String TAG_FRAGMENT_BUS_CARD = "TAG_FRAGMENT_BUS_CARD";
+    public final static String TAG_FRAGMENT_LOGO_CARD = "TAG_FRAGMENT_LOGO_CARD";
+    public final static String TAG_FRAGMENT_BG_IMG_CARD = "TAG_FRAGMENT_BG_IMG_CARD";
+    public final static String TAG_FRAGMENT_BG_COLOR_CARD = "TAG_FRAGMENT_BG_COLOR_CARD";
+    public final static String TAG_FRAGMENT_HEADER_CARD = "TAG_FRAGMENT_HEADER_CARD";
+    public final static String TAG_FRAGMENT_FOOTER_CARD = "TAG_FRAGMENT_FOOTER_CARD";
+    public final static String TAG_FRAGMENT_MAIN_TXT_CARD = "TAG_FRAGMENT_MAIN_TXT_CARD";
+    public final static String TAG_FRAGMENT_GENERAL_CARD = "TAG_FRAGMENT_GENERAL_CARD";
+    public final static String TAG_FRAGMENT_MAIL_CARD = "TAG_FRAGMENT_MAIL_CARD";
+    public final static String TAG_FRAGMENT_FB_CARD = "TAG_FRAGMENT_FB_CARD";
+    public final static String TAG_FRAGMENT_TW_CARD = "TAG_FRAGMENT_TW_CARD";
+    public final static String TAG_FRAGMENT_LIN_CARD = "TAG_FRAGMENT_LIN_CARD";
+    public final static String TAG_FRAGMENT_GOOGLE_CARD = "TAG_FRAGMENT_GOOGLE_CARD";
+    public final static String TAG_FRAGMENT_YOUTUBE_CARD = "TAG_FRAGMENT_YOUTUBE_CARD";
+    public final static String TAG_FRAGMENT_PHONE_CARD = "TAG_FRAGMENT_PHONE_CARD";
+    public final static String TAG_FRAGMENT_GALLERY_CARD = "TAG_FRAGMENT_GALLERY_CARD";
+    public final static String TAG_FRAGMENT_ABOUT_CARD = "TAG_FRAGMENT_ABOUT_CARD";
+    public final static String TAG_FRAGMENT_WEB_CARD = "TAG_FRAGMENT_WEB_CARD";
+    public final static String TAG_FRAGMENT_MAP_CARD = "TAG_FRAGMENT_MAP_CARD";
+    public final static String TAG_FRAGMENT_PIN_CARD = "TAG_FRAGMENT_PIN_CARD";
+    public final static String TAG_FRAGMENT_CHAT_CARD = "TAG_FRAGMENT_CHAT_CARD";
+    public final static String TAG_FRAGMENT_ANDR_CARD = "TAG_FRAGMENT_ANDR_CARD";
+    public final static String TAG_FRAGMENT_USER_PLUS_CARD = "TAG_FRAGMENT_USER_PLUS_CARD";
 }

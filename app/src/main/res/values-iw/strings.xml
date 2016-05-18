@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resources
-    >
+<resources>
     <string name="app_name">כרטיס ביקור דיגיטלי - יס פליז</string>
     <string name="prompt_email">שם משתמש או מייל</string>
     <string name="prompt_password">סיסמא</string>
@@ -105,4 +104,9 @@
     <string name="no_mail_client">There are no email clients installed.</string>
     <string name="card_items">Card items.</string>
     <string name="update">עדכן</string>
+    <string name="color_footer">Color Footer</string>
+    <string name="color_header">Color Header</string>
+    <string name="reset_label_color">Reset all label color</string>
+    <string name="reset_icon_color">Reset all color icons</string>
+    <string name="file_name">File name</string>
 </resources>

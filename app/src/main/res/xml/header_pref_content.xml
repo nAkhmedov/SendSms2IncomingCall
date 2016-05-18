@@ -10,13 +10,15 @@
         android:title="@string/header">
 
         <com.rarepebble.colorpicker.ColorPreference
-            android:key="header_color_code"
-            android:title="@string/header"
+            android:key="headercolor"
+            android:title="@string/color_header"
+            app:colorpicker_showAlpha="false"
+            app:colorpicker_showHex="false"
             app:colorpicker_defaultColor="#f00"/>
 
         <CheckBoxPreference
-            android:key="show_color_header"
-            android:title="@string/show_color"
+            android:key="ifheader"
+            android:title="@string/show"
             android:defaultValue="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -29,6 +29,7 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property MessageBody = new Property(3, String.class, "messageBody", false, "message_body");
         public final static Property MessageCode = new Property(4, String.class, "messageCode", false, "message_code");
         public final static Property DisabledDate = new Property(5, java.util.Date.class, "disabledDate", false, "disabled_date");
+        public final static Property Guid = new Property(6, String.class, "guid", false, "guid");
     };
 
 
@@ -49,7 +50,8 @@ public class UserDao extends AbstractDao<User, Long> {
                 "'password' TEXT," + // 2: password
                 "'message_body' TEXT," + // 3: messageBody
                 "'message_code' TEXT NOT NULL ," + // 4: messageCode
-                "'disabled_date' INTEGER);"); // 5: disabledDate
+                "'disabled_date' INTEGER," + // 5: disabledDate
+                "'guid' TEXT NOT NULL );"); // 6: guid
     }
 
     /** Drops the underlying database table. */
@@ -88,6 +90,7 @@ public class UserDao extends AbstractDao<User, Long> {
         if (disabledDate != null) {
             stmt.bindLong(6, disabledDate.getTime());
         }
+        stmt.bindString(7, entity.getGuid());
     }
 
     /** @inheritdoc */
@@ -105,7 +108,8 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // password
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // messageBody
             cursor.getString(offset + 4), // messageCode
-            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // disabledDate
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // disabledDate
+            cursor.getString(offset + 6) // guid
         );
         return entity;
     }
@@ -119,6 +123,7 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setMessageBody(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setMessageCode(cursor.getString(offset + 4));
         entity.setDisabledDate(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setGuid(cursor.getString(offset + 6));
      }
     
     /** @inheritdoc */

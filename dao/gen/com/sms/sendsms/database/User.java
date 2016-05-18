@@ -16,6 +16,8 @@ public class User {
     /** Not-null value. */
     private String messageCode;
     private java.util.Date disabledDate;
+    /** Not-null value. */
+    private String guid;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -27,13 +29,14 @@ public class User {
         this.id = id;
     }
 
-    public User(Long id, String email, String password, String messageBody, String messageCode, java.util.Date disabledDate) {
+    public User(Long id, String email, String password, String messageBody, String messageCode, java.util.Date disabledDate, String guid) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.messageBody = messageBody;
         this.messageCode = messageCode;
         this.disabledDate = disabledDate;
+        this.guid = guid;
     }
 
     public Long getId() {
@@ -84,6 +87,16 @@ public class User {
 
     public void setDisabledDate(java.util.Date disabledDate) {
         this.disabledDate = disabledDate;
+    }
+
+    /** Not-null value. */
+    public String getGuid() {
+        return guid;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     // KEEP METHODS - put your custom methods here

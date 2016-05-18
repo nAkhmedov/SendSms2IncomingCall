@@ -1,11 +1,12 @@
 package com.sms.sendsms.fragment;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.google.gson.JsonObject;
 import com.sms.sendsms.ApplicationLoader;
@@ -14,10 +15,16 @@ import com.sms.sendsms.activity.EditCardActivity;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
 import com.sms.sendsms.execution.CustomHTTPService;
+import com.sms.sendsms.util.ImageUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,14 +38,13 @@ public class MainCardPreference extends PreferenceFragment implements Preference
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainCardPreference.class);
 
-    private final static String TAG_FRAGMENT_BUS_CARD = "TAG_FRAGMENT_BUS_CARD";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         addPreferencesFromResource(R.xml.main_pref_content);
         Preference businessPref = findPreference("a_bus_name");
+        Preference logoPref = findPreference("a_logo");
         Preference bgImgPref = findPreference("a_bg_img");
         Preference bgColorPref = findPreference("a_bg_color");
         Preference headerPref = findPreference("a_header");
@@ -61,6 +67,7 @@ public class MainCardPreference extends PreferenceFragment implements Preference
         Preference androidAppPref = findPreference("a_android_app");
         Preference userPlusPref = findPreference("a_user_plus");
         businessPref.setOnPreferenceClickListener(this);
+        logoPref.setOnPreferenceClickListener(this);
         bgImgPref.setOnPreferenceClickListener(this);
         bgColorPref.setOnPreferenceClickListener(this);
         headerPref.setOnPreferenceClickListener(this);
@@ -82,159 +89,6 @@ public class MainCardPreference extends PreferenceFragment implements Preference
         chatPref.setOnPreferenceClickListener(this);
         androidAppPref.setOnPreferenceClickListener(this);
         userPlusPref.setOnPreferenceClickListener(this);
-        sendRequest2Data();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.card_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_update: {
-                updateBusinessData();
-                break;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void sendRequest2Data() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ContextConstants.APP_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        CustomHTTPService http = retrofit.create(CustomHTTPService.class);
-        http.sendBusinessDetailRequest("13933").enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject jsonObject = response.body();
-                if (jsonObject != null && !jsonObject.entrySet().isEmpty()) {
-                    parseJson(jsonObject);
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable error) {
-                LOGGER.error("Exception = " + error.getMessage());
-                error.printStackTrace();
-            }
-        });
-    }
-
-    private void parseJson(final JsonObject jsonObject) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Business business = new Business();
-                business.setStoreCode(jsonObject.get("storecode").getAsString());
-                business.setBusinessName(jsonObject.get("businessname").getAsString());
-                business.setLogo(jsonObject.get("logo").getAsString());
-                business.setBackgroundImage(jsonObject.get("backgroundimage").getAsString());
-                business.setBackgroundColor(jsonObject.get("backgroundcolor").getAsString());
-                business.setCustomHeaderColor(jsonObject.get("headercolor").getAsString());
-                business.setFooterColor(jsonObject.get("footercolor").getAsString());
-                business.setIfLogo(jsonObject.get("iflogo").getAsBoolean());
-                business.setIfMail(jsonObject.get("ifmail").getAsBoolean());
-                business.setIfFacebook(jsonObject.get("iffacebook").getAsBoolean());
-                business.setIfTwitter(jsonObject.get("iftwitter").getAsBoolean());
-                business.setIfLinkedin(jsonObject.get("iflinkedin").getAsBoolean());
-                business.setIfGoogleplus(jsonObject.get("ifgoogleplus").getAsBoolean());
-                business.setIfYoutube(jsonObject.get("ifyoutube").getAsBoolean());
-                business.setIfPhone(jsonObject.get("ifphone").getAsBoolean());
-                business.setIfGallery(jsonObject.get("ifgallery").getAsBoolean());
-                business.setIfAbout(jsonObject.get("ifabout").getAsBoolean());
-                business.setIfWebsite(jsonObject.get("ifwebsite").getAsBoolean());
-                business.setIfMap(jsonObject.get("ifmap").getAsBoolean());
-                business.setIfPinterest(jsonObject.get("ifpinterest").getAsBoolean());
-                business.setIfAndroid(jsonObject.get("ifandroid").getAsBoolean());
-                business.setMainText(jsonObject.get("maintext").getAsString());
-                business.setMailIconColor(jsonObject.get("mail_icon_color").getAsString());
-                business.setMailLabelColor(jsonObject.get("mail_label_color").getAsString());
-                business.setMailLabel(jsonObject.get("mail_label").getAsString());
-                business.setFacebookIconColor(jsonObject.get("facebook_icon_color").getAsString());
-                business.setFacebookLabelColor(jsonObject.get("facebook_label_color").getAsString());
-                business.setFacebookLabel(jsonObject.get("facebook_label").getAsString());
-                business.setTwitterIconColor(jsonObject.get("twitter_icon_color").getAsString());
-                business.setTwitterLabelColor(jsonObject.get("twitter_label_color").getAsString());
-                business.setTwitterLabel(jsonObject.get("twitter_label").getAsString());
-                business.setLinkedinIconColor(jsonObject.get("linkedin_icon_color").getAsString());
-                business.setLinkedinLabelColor(jsonObject.get("linkedin_label_color").getAsString());
-                business.setLinkedinLabel(jsonObject.get("linkedin_label").getAsString());
-                business.setGoogleplusIconColor(jsonObject.get("googleplus_icon_color").getAsString());
-                business.setGoogleplusLabelColor(jsonObject.get("googleplus_label_color").getAsString());
-                business.setGoogleplusLabel(jsonObject.get("googleplus_label").getAsString());
-                business.setMailAddress(jsonObject.get("mail_address").getAsString());
-                business.setFacebookAddress(jsonObject.get("facebook_address").getAsString());
-                business.setTwitterAddress(jsonObject.get("twitter_address").getAsString());
-                business.setLinkedinAddress(jsonObject.get("linkedin_address").getAsString());
-                business.setGoogleplusAddress(jsonObject.get("googleplus_address").getAsString());
-                business.setYoutubeIconColor(jsonObject.get("youtube_icon_color").getAsString());
-                business.setYoutubeLabelColor(jsonObject.get("youtube_label_color").getAsString());
-                business.setYoutubeLabel(jsonObject.get("youtube_label").getAsString());
-                business.setYoutubeAddress(jsonObject.get("youtube_address").getAsString());
-                business.setPhoneLabelColor(jsonObject.get("phone_label_color").getAsString());
-                business.setPhoneIconColor(jsonObject.get("phone_icon_color").getAsString());
-                business.setPhoneLabel(jsonObject.get("phone_label").getAsString());
-                business.setPhoneAddress(jsonObject.get("phone_address").getAsString());
-                business.setGalleryIconColor(jsonObject.get("gallery_icon_color").getAsString());
-                business.setGalleryLabelColor(jsonObject.get("gallery_label_color").getAsString());
-                business.setGalleryLabel(jsonObject.get("gallery_label").getAsString());
-                business.setGalleryAddress(jsonObject.get("gallery_address").getAsString());
-                business.setAboutIconColor(jsonObject.get("about_icon_color").getAsString());
-                business.setAboutLabelColor(jsonObject.get("about_label_color").getAsString());
-                business.setAboutLabel(jsonObject.get("about_label").getAsString());
-                business.setAboutAddress(jsonObject.get("about_address").getAsString());
-                business.setWebsiteIconColor(jsonObject.get("website_icon_color").getAsString());
-                business.setWebsiteLabelColor(jsonObject.get("website_label_color").getAsString());
-                business.setWebsiteLabel(jsonObject.get("website_label").getAsString());
-                business.setWebsiteAddress(jsonObject.get("website_address").getAsString());
-                business.setMapIconColor(jsonObject.get("map_icon_color").getAsString());
-                business.setMapLabelColor(jsonObject.get("map_label_color").getAsString());
-                business.setMapLabel(jsonObject.get("map_label").getAsString());
-                business.setMapAddress(jsonObject.get("map_address").getAsString());
-                business.setPinterestIconColor(jsonObject.get("pinterest_icon_color").getAsString());
-                business.setPinterestLabelColor(jsonObject.get("pinterest_label_color").getAsString());
-                business.setPinterestLabel(jsonObject.get("pinterest_label").getAsString());
-                business.setPinterestAddress(jsonObject.get("pinterest_address").getAsString());
-                business.setAndroidIconColor(jsonObject.get("android_icon_color").getAsString());
-                business.setAndroidLabelColor(jsonObject.get("android_label_color").getAsString());
-                business.setAndroidLabel(jsonObject.get("android_label").getAsString());
-                business.setAndroidAddress(jsonObject.get("android_address").getAsString());
-                business.setIfBusinessname(jsonObject.get("ifbusinessname").getAsBoolean());
-                business.setBusinessnameColor(jsonObject.get("businessname_color").getAsString());
-                business.setMaintextColor(jsonObject.get("maintext_color").getAsString());
-                business.setIfFooter(jsonObject.get("iffooter").getAsBoolean());
-                business.setIfHeader(jsonObject.get("ifheader").getAsBoolean());
-                business.setIfUserplus(jsonObject.get("ifuserplus").getAsBoolean());
-                business.setUserplusIconColor(jsonObject.get("userplus_icon_color").getAsString());
-                business.setUserplusLabelColor(jsonObject.get("userplus_label_color").getAsString());
-                business.setUserplusLabel(jsonObject.get("userplus_label").getAsString());
-                business.setBitly(jsonObject.get("bitly").getAsString());
-                business.setMaskyoo(jsonObject.get("maskyoo").getAsString());
-                business.setActive(jsonObject.get("active").getAsBoolean());
-                business.setAboutTextColor(jsonObject.get("about_text_color").getAsString());
-                business.setFooterIconsColor(jsonObject.get("footer_icons_color").getAsString());
-                business.setFooterIconsBackground(jsonObject.get("footer_icons_background").getAsString());
-                business.setRealPhone(jsonObject.get("realphone").getAsString());
-                business.setMonthlySms(jsonObject.get("monthlysms").getAsInt());
-                business.setChatIconColor(jsonObject.get("chat_icon_color").getAsString());
-                business.setChatLabelColor(jsonObject.get("chat_label_color").getAsString());
-                business.setChatLabel(jsonObject.get("chat_label").getAsString());
-                business.setIfChat(jsonObject.get("ifchat").getAsBoolean());
-                business.setTest(jsonObject.get("test").getAsInt());
-
-                long id = ApplicationLoader.getApplication(getActivity())
-                        .getDaoSession()
-                        .getBusinessDao()
-                        .insertOrReplace(business);
-                EditCardActivity.businessId = id;
-            }
-        }).start();
     }
 
     @Override
@@ -242,93 +96,165 @@ public class MainCardPreference extends PreferenceFragment implements Preference
         switch (preference.getKey()) {
             case "a_bus_name": {
                 getFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, new BusinessCardPreference(), TAG_FRAGMENT_BUS_CARD)
+                        .replace(android.R.id.content, new BusinessCardPreference(), ContextConstants.TAG_FRAGMENT_BUS_CARD)
                         .addToBackStack(null)
                         .commit();
                 break;
             }
+            case "a_logo": {
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new LogoCardPreference(), ContextConstants.TAG_FRAGMENT_LOGO_CARD)
+                        .addToBackStack(null)
+                        .commit();
+
+                break;
+            }
             case "a_bg_img": {
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new BgImgCardPreference(), ContextConstants.TAG_FRAGMENT_BG_IMG_CARD)
+                        .addToBackStack(null)
+                        .commit();
 
                 break;
             }
             case "a_bg_color": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new BgColorCardPreference(), ContextConstants.TAG_FRAGMENT_BG_COLOR_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_header": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new HeaderColorCardPreference(), ContextConstants.TAG_FRAGMENT_HEADER_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_footer": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new FooterColorCardPreference(), ContextConstants.TAG_FRAGMENT_FOOTER_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_main_label_txt": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new MainTextCardPreference(), ContextConstants.TAG_FRAGMENT_MAIN_TXT_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_general": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new GeneralCardPreference(), ContextConstants.TAG_FRAGMENT_GENERAL_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_mail": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new MailCardPreference(), ContextConstants.TAG_FRAGMENT_MAIL_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_facebook": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new FBCardPreference(), ContextConstants.TAG_FRAGMENT_FB_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_twitter": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new TwitCardPreference(), ContextConstants.TAG_FRAGMENT_TW_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_linked_in": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new LinkedInCardPreference(), ContextConstants.TAG_FRAGMENT_LIN_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_google_plus": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new GoogleCardPreference(), ContextConstants.TAG_FRAGMENT_GOOGLE_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_youtube": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new YoutubeCardPreference(), ContextConstants.TAG_FRAGMENT_YOUTUBE_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_phone": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new PhoneCardPreference(), ContextConstants.TAG_FRAGMENT_PHONE_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_gallery": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new GalleryCardPreference(), ContextConstants.TAG_FRAGMENT_GALLERY_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_about": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new AboutCardPreference(), ContextConstants.TAG_FRAGMENT_ABOUT_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_website": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new WebsiteCardPreference(), ContextConstants.TAG_FRAGMENT_WEB_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_map": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new MapCardPreference(), ContextConstants.TAG_FRAGMENT_MAP_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_pinterest": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new PinterestCardPreference(), ContextConstants.TAG_FRAGMENT_PIN_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_chat": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new ChatCardPreference(), ContextConstants.TAG_FRAGMENT_CHAT_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_android_app": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new AndroidCardPreference(), ContextConstants.TAG_FRAGMENT_ANDR_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
             case "a_user_plus": {
-
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new UserPlusCardPreference(), ContextConstants.TAG_FRAGMENT_USER_PLUS_CARD)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
 
@@ -336,7 +262,8 @@ public class MainCardPreference extends PreferenceFragment implements Preference
         return true;
     }
 
-    private void updateBusinessData() {
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

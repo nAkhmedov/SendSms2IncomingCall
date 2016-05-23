@@ -1,9 +1,5 @@
 package com.sms.sendsms.activity;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -18,15 +14,13 @@ import com.sms.sendsms.database.User;
 import com.sms.sendsms.execution.CustomHTTPService;
 import com.sms.sendsms.fragment.BusinessCardPreference;
 import com.sms.sendsms.fragment.MainCardPreference;
-import com.sms.sendsms.util.ImageUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -270,8 +264,32 @@ public  class EditCardActivity extends AppCompatActivity {
         }).start();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void uploadFile2Api(String property, MultipartBody.Part multipartBody) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ContextConstants.APP_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+        CustomHTTPService http = retrofit.create(CustomHTTPService.class);
+
+        http.uploadFile(user.getGuid(), property, multipartBody).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                LOGGER.info("CHECKING response2 = " + response);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable error) {
+                LOGGER.info("CHECKING error2 = " + error);
+            }
+        });
     }
 }

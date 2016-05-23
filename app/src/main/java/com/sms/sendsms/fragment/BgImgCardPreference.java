@@ -11,18 +11,21 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
-import com.google.gson.JsonObject;
 import com.sms.sendsms.R;
 import com.sms.sendsms.activity.EditCardActivity;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
-import com.sms.sendsms.util.ImageUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by Navruz on 17.05.2016.
@@ -124,10 +127,16 @@ public class BgImgCardPreference extends PreferenceFragment implements Preferenc
                     Uri selectedImage = intent.getData();
                     try {
                         InputStream imageStream = getActivity().getContentResolver().openInputStream(selectedImage);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         Bitmap imageBitmap = BitmapFactory.decodeStream(imageStream);
-                        String base64String = ImageUtil.encodeToBase64(imageBitmap);
-                        LOGGER.info("JSON = " + base64String);
-                        ((EditCardActivity) getActivity()).updateCard("backgroundimage_base64", base64String);
+                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] bytes = baos.toByteArray();
+                        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), bytes);
+                        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", "fileName", requestFile);
+
+//                        String base64String = ImageUtil.encodeToBase64(imageBitmap);
+//                        LOGGER.info("JSON = " + base64String);
+                        ((EditCardActivity) getActivity()).uploadFile2Api("backgroundimage_base64", multipartBody);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }

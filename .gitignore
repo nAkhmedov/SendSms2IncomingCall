@@ -44,5 +44,3 @@ gradle-app.setting
 
 .idea/
 *.iml
-app/lib/native-libs.jar
-

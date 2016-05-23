@@ -132,7 +132,7 @@ public class BgImgCardPreference extends PreferenceFragment implements Preferenc
                         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                         byte[] bytes = baos.toByteArray();
                         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), bytes);
-                        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", "fileName", requestFile);
+                        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file1", "file1", requestFile);
 
 //                        String base64String = ImageUtil.encodeToBase64(imageBitmap);
 //                        LOGGER.info("JSON = " + base64String);

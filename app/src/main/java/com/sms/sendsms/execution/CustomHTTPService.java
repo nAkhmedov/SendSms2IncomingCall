@@ -30,7 +30,7 @@ public interface CustomHTTPService {
     Call<String> sendCardData(@Query("code") String code, @Query("name") String name, @Body JsonObject businessname);
 
     @Multipart
-    @POST("write.asp")
+    @POST("upload.asp")
     Call<ResponseBody> uploadFile(@Query("code") String code, @Query("name") String name,
                                   @Part MultipartBody.Part multipartBody);
 }

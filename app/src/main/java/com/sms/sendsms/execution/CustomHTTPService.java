@@ -11,6 +11,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * Created by Navruz on 22.08.2015.
@@ -33,4 +34,7 @@ public interface CustomHTTPService {
     @POST("upload.asp")
     Call<ResponseBody> uploadFile(@Query("code") String code, @Query("name") String name,
                                   @Part MultipartBody.Part multipartBody);
+
+    @GET
+    Call<ResponseBody> getBgImg(@Url String fileUrl);
 }

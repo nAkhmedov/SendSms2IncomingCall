@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
                   android:key="pref_screen_root"
                   android:icon="@mipmap/ic_launcher">
 
@@ -15,12 +14,11 @@
             <!--android:title="@string/bg_text"/>-->
 
         <Preference
+            android:key="backgroundimage_base64"
+            android:title="@string/choose_file"/>
+
+        <com.sms.sendsms.util.ImageViewPreference
             android:key="backgroundimage"
             android:title="@string/file_name"/>
-
-        <Preference
-            android:key="backgroundimage_base64"
-            android:title="@string/choose_file"
-            android:summary="File name"/>
     </PreferenceCategory>
 </PreferenceScreen>

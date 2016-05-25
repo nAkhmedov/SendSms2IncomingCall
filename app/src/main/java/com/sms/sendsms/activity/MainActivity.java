@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,11 +48,18 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private RelativeLayout mainLayout;
     private ReportHelper reportHelper;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        user = ApplicationLoader.getApplication(MainActivity.this)
+                .getDaoSession()
+                .getUserDao()
+                .queryBuilder()
+                .unique();
 
         sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -86,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Resources res = getResources();
+        String link = "<a href=\"http://www.yes-please.co.il/card/" + user.getMessageCode() + "\">" +  res.getString(R.string.preview)+ "</a>";
+        CharSequence text = Html.fromHtml(String.format(res.getString(R.string.preview_link), link));
+        preview.setText(text);
         preview.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
@@ -154,11 +167,6 @@ public class MainActivity extends AppCompatActivity {
 //                        .where(SmsLogDao.Properties.AccountId.eq(user.getId()))
 //                        .list();
 
-                User user = ApplicationLoader.getApplication(MainActivity.this)
-                        .getDaoSession()
-                        .getUserDao()
-                        .queryBuilder()
-                        .unique();
                 LOGGER.info("Service is stopping");
                 stopService(new Intent(MainActivity.this, SendSmsService.class));
 

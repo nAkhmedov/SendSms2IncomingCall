@@ -28,7 +28,7 @@ public class GalleryCardPreference extends PreferenceFragment {
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
 
-    private EditTextPreference galleryAddress;
+//    private EditTextPreference galleryAddress;
     private ColorPreference galleryLabelColor;
     private ColorPreference galleryIconColor;
     private EditTextPreference galleryLabel;
@@ -46,14 +46,14 @@ public class GalleryCardPreference extends PreferenceFragment {
         business = EditCardActivity.business;
 
         //Gallery item
-        galleryAddress = (EditTextPreference) findPreference("gallery_address");
+//        galleryAddress = (EditTextPreference) findPreference("gallery_address");
         galleryLabelColor = (ColorPreference) findPreference("gallery_label_color");
         galleryIconColor = (ColorPreference) findPreference("gallery_icon_color");
         galleryLabel = (EditTextPreference) findPreference("gallery_label");
         ifGallery = (CheckBoxPreference) findPreference("ifgallery");
 
-        galleryAddress.setText(business.getGalleryAddress());
-        galleryAddress.setSummary(business.getGalleryAddress());
+//        galleryAddress.setText(business.getGalleryAddress());
+//        galleryAddress.setSummary(business.getGalleryAddress());
         galleryLabelColor.setColor(Color.parseColor(business.getGalleryLabelColor()));
         galleryIconColor.setColor(Color.parseColor(business.getGalleryIconColor()));
         galleryLabel.setText(business.getGalleryLabel());
@@ -70,12 +70,12 @@ public class GalleryCardPreference extends PreferenceFragment {
 
     private void setNewValues(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "gallery_address": {
-                String addressValue = sharedPreferences.getString(key, "");
-                galleryAddress.setSummary(addressValue);
-                ((EditCardActivity) getActivity()).updateCard(key, addressValue);
-                break;
-            }
+//            case "gallery_address": {
+//                String addressValue = sharedPreferences.getString(key, "");
+//                galleryAddress.setSummary(addressValue);
+//                ((EditCardActivity) getActivity()).updateCard(key, addressValue);
+//                break;
+//            }
             case "gallery_label_color": {
                 int colorValue = sharedPreferences.getInt(key, 0);
                 String hexColor = String.format("#%06X", (0xFFFFFF & colorValue));

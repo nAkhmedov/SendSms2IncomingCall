@@ -89,7 +89,6 @@
             android:layout_below="@id/edit_card"
             android:gravity="center"
             android:paddingTop="15dp"
-            android:text="@string/preview"
             android:textSize="15dp"/>
     </RelativeLayout>
     <Button

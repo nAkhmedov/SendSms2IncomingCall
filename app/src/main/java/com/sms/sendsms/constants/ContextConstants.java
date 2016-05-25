@@ -5,12 +5,15 @@ import com.sms.sendsms.ApplicationLoader;
 public class ContextConstants {
 
     public static final String APP_URL = "http://www.yesplease.co.il/app/";
+    public static final String CARD_URL = "http://www.yes-please.co.il/card/";
     public static final String DATA_PATH = ApplicationLoader.getAppContext().getExternalFilesDir(null) + "/data";
+    public static final String APP_IMG_PATH = DATA_PATH + "/images";
     public static final String PHONE_NUMBER_FORMAT_F = "05";
     public static final String PHONE_NUMBER_FORMAT_S = "+9725";
     public static final long DAY_PERIOD = 3;
     public static final int REPORT_REQUEST_CODE = 527;
-    public static final int SELECT_BG_PHOTO = 528;
+    public static final int SELECT_BG_IMG = 528;
+    public static final int SELECT_LOGO_IMG = 529;
 
     public final static String TAG_FRAGMENT_BUS_CARD = "TAG_FRAGMENT_BUS_CARD";
     public final static String TAG_FRAGMENT_LOGO_CARD = "TAG_FRAGMENT_LOGO_CARD";

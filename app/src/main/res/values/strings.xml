@@ -100,7 +100,8 @@
     <string name="youtube_label">Youtube Label</string>
     <string name="general">General</string>
     <string name="edit_card">Edit card</string>
-    <string name="preview"><a href="http://www.yes-please.co.il/card/13933">Preview</a></string>
+    <string name="preview">Preview</string>
+    <string name="preview_link">%1$s</string>
     <string name="menu_send_report">Send report</string>
     <string name="no_mail_client">There are no email clients installed.</string>
     <string name="card_items">Card items.</string>
@@ -110,4 +111,7 @@
     <string name="reset_label_color">Reset all label color</string>
     <string name="reset_icon_color">Reset all color icons</string>
     <string name="file_name">File name</string>
+    <string name="loading">Loading...</string>
+    <string name="downloading_img">Downloading image...</string>
+    <string name="cant_download_img">For some reason couldn\'t download image</string>
 </resources>

@@ -109,6 +109,7 @@ public class Business {
     private int test;
 
     // KEEP FIELDS - put your custom fields here
+
     private String defaultColor = "#ffffff";
     // KEEP FIELDS END
 
@@ -998,16 +999,6 @@ public class Business {
     }
 
     // KEEP METHODS - put your custom methods here
-    public void setCustomHeaderColor(String headerColor) {
-        if (headerColor.isEmpty()) {
-            headerColor = this.defaultColor;
-        }
-        this.headerColor = headerColor;
-    }
-
-    public void setCustomMaintextColor(String maintextColor) {
-        this.maintextColor = maintextColor;
-    }
     // KEEP METHODS END
 
 }

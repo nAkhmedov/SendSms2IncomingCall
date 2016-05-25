@@ -9,10 +9,10 @@
         android:key="gallery"
         android:title="@string/gallery">
 
-        <EditTextPreference
-            android:key="gallery_address"
-            android:hint="@string/type_here"
-            android:title="@string/gallery_address"/>
+        <!--<EditTextPreference-->
+            <!--android:key="gallery_address"-->
+            <!--android:hint="@string/type_here"-->
+            <!--android:title="@string/gallery_address"/>-->
 
         <com.rarepebble.colorpicker.ColorPreference
             android:key="gallery_label_color"

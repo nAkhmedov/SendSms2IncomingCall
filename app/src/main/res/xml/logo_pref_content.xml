@@ -16,12 +16,14 @@
 
         <Preference
             android:key="logo"
-            android:title="@string/choose_file"
-            android:summary="File name"/>
+            android:title="@string/choose_file"/>
 
         <CheckBoxPreference
             android:key="iflogo"
             android:title="@string/show"
             android:defaultValue="false"/>
+
+        <com.sms.sendsms.util.ImageViewPreference
+            android:key="logoimage"/>
     </PreferenceCategory>
 </PreferenceScreen>

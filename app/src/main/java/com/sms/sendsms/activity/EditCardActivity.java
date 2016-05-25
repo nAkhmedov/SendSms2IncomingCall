@@ -1,5 +1,6 @@
 package com.sms.sendsms.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -8,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sms.sendsms.ApplicationLoader;
+import com.sms.sendsms.R;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
 import com.sms.sendsms.database.User;
@@ -28,7 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public  class EditCardActivity extends AppCompatActivity {
+public  class EditCardActivity extends BaseCEActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
 
@@ -53,11 +55,7 @@ public  class EditCardActivity extends AppCompatActivity {
                 .getUserDao()
                 .queryBuilder()
                 .unique();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         sendRequest2Data();
     }
 
@@ -123,6 +121,8 @@ public  class EditCardActivity extends AppCompatActivity {
     }
 
     private void sendRequest2Data() {
+        showDialog();
+
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -141,12 +141,14 @@ public  class EditCardActivity extends AppCompatActivity {
                 if (jsonObject != null && !jsonObject.entrySet().isEmpty()) {
                     parseJson(jsonObject);
                 } else {
-
+                    LOGGER.error("BusinessDetailRequest is empty or null");
                 }
+                dismissDialog();
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable error) {
+                dismissDialog();
                 LOGGER.error("Exception = " + error.getMessage());
                 error.printStackTrace();
             }

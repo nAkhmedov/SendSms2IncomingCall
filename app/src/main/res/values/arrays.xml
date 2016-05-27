@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="period_entries">
+        <item>@string/everytime</item>
+        <item>@string/once_day</item>
+        <item>@string/once_week</item>
+        <item>@string/once_month</item>
+    </string-array>
+</resources>

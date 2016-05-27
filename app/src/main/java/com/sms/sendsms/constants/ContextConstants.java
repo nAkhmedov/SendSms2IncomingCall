@@ -10,7 +10,11 @@ public class ContextConstants {
     public static final String APP_IMG_PATH = DATA_PATH + "/images";
     public static final String PHONE_NUMBER_FORMAT_F = "05";
     public static final String PHONE_NUMBER_FORMAT_S = "+9725";
-    public static final long DAY_PERIOD = 3;
+    public static final long EVERYTIME_PERIOD = 0;
+    public static final long ONE_DAY_PERIOD = 1;
+    public static final long THREE_DAY_PERIOD = 3;
+    public static final long WEEK_DAY_PERIOD = 7;
+    public static final long MONTH_DAY_PERIOD = 30;
     public static final int REPORT_REQUEST_CODE = 527;
     public static final int SELECT_BG_IMG = 528;
     public static final int SELECT_LOGO_IMG = 529;
@@ -38,4 +42,5 @@ public class ContextConstants {
     public final static String TAG_FRAGMENT_CHAT_CARD = "TAG_FRAGMENT_CHAT_CARD";
     public final static String TAG_FRAGMENT_ANDR_CARD = "TAG_FRAGMENT_ANDR_CARD";
     public final static String TAG_FRAGMENT_USER_PLUS_CARD = "TAG_FRAGMENT_USER_PLUS_CARD";
+    public final static String TAG_FRAGMENT_SETTINGS = "TAG_FRAGMENT_SETTINGS";
 }

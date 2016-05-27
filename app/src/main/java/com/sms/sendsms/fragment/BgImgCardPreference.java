@@ -48,12 +48,10 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
 
-    public static SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private SharedPreferences prefs = null;
-
     //    private EditTextPreference bgText;
     private ImageViewPreference bgImgdRes;
     private Preference bgFile;
+    private Preference removeBgPref;
     private Business business;
     private User user;
 
@@ -73,24 +71,17 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
 
         downloadCurrentBgImg();
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-
         //Background item
 //        bgText = (EditTextPreference) findPreference("bg_text");
         bgImgdRes = (ImageViewPreference) findPreference("backgroundimage");
         bgFile = findPreference("backgroundimage_base64");
+        removeBgPref = findPreference("remove_bg");
         bgFile.setOnPreferenceClickListener(this);
+        removeBgPref.setOnPreferenceClickListener(this);
+
 //        Bitmap bitmapImgData;
 //        bgImgdRes.setImage(bitmapImgData);
 //        bgText.setSummary(business.getBackgroundImage());
-
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                setNewValues(sharedPreferences, key);
-            }
-        };
     }
 
     private void downloadCurrentBgImg() {
@@ -105,7 +96,7 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
                 .client(client)
                 .build();
         CustomHTTPService downloadService = retrofit.create(CustomHTTPService.class);
-        String fileUrl = "images/" + user.getMessageCode() + "-backgroundimage.png";
+        String fileUrl = "images/" + business.getBackgroundImage();
         Call<ResponseBody> call = downloadService.getBgImg(fileUrl);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -137,27 +128,6 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
         });
     }
 
-    private void setNewValues(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case "": {
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (prefs != null)
-            prefs.registerOnSharedPreferenceChangeListener(listener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (prefs != null)
-            prefs.unregisterOnSharedPreferenceChangeListener(listener);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -173,14 +143,16 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
             case "backgroundimage_base64": {
-//                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-//                photoPickerIntent.setType("image/*");
-//                startActivityForResult(photoPickerIntent, ContextConstants.SELECT_BG_IMG);
-
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), ContextConstants.SELECT_BG_IMG);
+                break;
+            }
+            case "remove_bg": {
+                bgImgdRes.removeImg();
+                ((EditCardActivity) getActivity()).updateCard("backgroundimage", "");
+                ((EditCardActivity) getActivity()).resendRequestData();
             }
         }
         return false;

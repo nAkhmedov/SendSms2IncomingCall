@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="settings"
+        android:title="@string/settings">
+
+        <ListPreference
+            android:key="send_sms_period"
+            android:title="@string/send_sms_period"
+            android:entries="@array/period_entries"
+            android:entryValues="@array/period_entries"
+            android:defaultValue="@string/everytime"
+            android:summary="@string/everytime"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

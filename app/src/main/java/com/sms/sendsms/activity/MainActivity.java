@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Resources res = getResources();
-        String link = "<a href=\"http://www.yes-please.co.il/card/" + user.getMessageCode() + "\">" +  res.getString(R.string.preview)+ "</a>";
+        String link = "<a href=\"" + ContextConstants.CARD_URL + user.getMessageCode() + "\">" +  res.getString(R.string.preview)+ "</a>";
         CharSequence text = Html.fromHtml(String.format(res.getString(R.string.preview_link), link));
         preview.setText(text);
         preview.setMovementMethod(LinkMovementMethod.getInstance());
@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.item_send_report: {
                 sendReport();
+                break;
+            }
+            case R.id.item_settings: {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             }
         }

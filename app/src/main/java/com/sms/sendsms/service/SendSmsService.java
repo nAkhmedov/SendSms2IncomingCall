@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -26,13 +27,20 @@ import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.constants.NotificationConstants;
 import com.sms.sendsms.database.BlackListDao;
 import com.sms.sendsms.database.SmsLog;
+import com.sms.sendsms.database.SmsLogDao;
 import com.sms.sendsms.database.User;
 import com.sms.sendsms.receiver.KeepAliveAlarmReceiver;
+import com.sms.sendsms.util.DateUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Navruz on 30.03.2016.
@@ -201,7 +209,7 @@ public class SendSmsService extends Service {
         }
     }
 
-    private void sendSms(String phoneNumber,String message, boolean isBinary) {
+    private void sendSms(String phoneNumber,String messageText, boolean isBinary) {
         LOGGER.info("Sending sms to phoneNumber = " + phoneNumber);
         if (phoneNumber == null || phoneNumber.isEmpty()) {
             LOGGER.info("Failed: Couldn't sent message to number = " + phoneNumber);
@@ -224,11 +232,49 @@ public class SendSmsService extends Service {
             return;
         }
 
-        if (message == null || message.isEmpty()) {
-            LOGGER.info("Error: Sending msg content empty or null message = " + message);
+        if (messageText == null || messageText.isEmpty()) {
+            LOGGER.info("Error: Sending msg content empty or null message = " + messageText);
             mLastState = -1;
             return;
         }
+
+//        List<SmsLog> smsList = ApplicationLoader.getApplication(this)
+//                .getDaoSession()
+//                .getSmsLogDao()
+//                .queryBuilder()
+//                .where(SmsLogDao.Properties.SentNumber.eq(phoneNumber))
+//                .orderDesc(SmsLogDao.Properties.SentDate)
+//                .build()
+//                .list();
+//        Resources res = getResources();
+//        String period = sharedPref.getString("send_sms_period", res.getString(R.string.everytime));
+//        String everytime = res.getString(R.string.everytime);
+//        String onceADay = res.getString(R.string.once_day);
+//        String onceAWeek = res.getString(R.string.once_week);
+//        String onceAMonth = res.getString(R.string.once_month);
+//        long settingsPeriod = 0;
+//        if (period.equals(everytime)) {
+//            settingsPeriod = ContextConstants.EVERYTIME_PERIOD;
+//        } else if (period.equals(onceADay)) {
+//            settingsPeriod = ContextConstants.ONE_DAY_PERIOD;
+//        } else if (period.equals(onceAWeek)) {
+//            settingsPeriod = ContextConstants.WEEK_DAY_PERIOD;
+//        } else {
+//            settingsPeriod = ContextConstants.MONTH_DAY_PERIOD;
+//        }
+//
+//        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy h:mm a");
+//        try {
+//            Date date = format.parse(smsList.get(0).getSentDate());
+//            Calendar thatDay = Calendar.getInstance();
+//            thatDay.setTime(date);
+//            if (settingsPeriod != ContextConstants.EVERYTIME_PERIOD &&
+//                    DateUtil.isMoreThanSelectedDays(thatDay, settingsPeriod)) {
+//
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         LOGGER.info("Sending probable success ");
         recipientNumber = phoneNumber;
@@ -237,7 +283,7 @@ public class SendSmsService extends Service {
         PendingIntent piSend = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
         PendingIntent piDelivered = PendingIntent.getBroadcast(this, 0, new Intent(SMS_DELIVERED), 0);
 
-        ArrayList<String> messageList = manager.divideMessage(message);
+        ArrayList<String> messageList = manager.divideMessage(messageText);
         ArrayList<PendingIntent> sendList = new ArrayList<>(1);
         sendList.add(piSend);
         ArrayList<PendingIntent> deliverList = new ArrayList<>(1);

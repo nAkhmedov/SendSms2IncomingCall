@@ -36,10 +36,27 @@ public abstract class BaseCEActivity extends AppCompatActivity {
     }
 
     public void showDialog() {
-        dialog = new ProgressDialog(BaseCEActivity.this);
-        dialog.setMessage(getResources().getString(R.string.loading));
-        dialog.setCancelable(false);
-        dialog.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog = new ProgressDialog(BaseCEActivity.this);
+                dialog.setMessage(getResources().getString(R.string.loading));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        });
+    }
+
+    public void showCustomDialog(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog = new ProgressDialog(BaseCEActivity.this);
+                dialog.setMessage(text);
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        });
     }
 
     public void dismissDialog() {

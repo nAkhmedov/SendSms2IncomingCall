@@ -9,10 +9,10 @@ import java.util.Calendar;
  */
 public class DateUtil {
 
-    public static boolean isMoreThan3Days(Calendar thatDay) {
+    public static boolean isMoreThanSelectedDays(Calendar thatDay, long givenDay) {
         Calendar today = Calendar.getInstance();
         long diff = today.getTimeInMillis() - thatDay.getTimeInMillis(); //result in millis
         long days = diff / (24 * 60 * 60 * 1000);
-        return days > ContextConstants.DAY_PERIOD;
+        return days > givenDay;
     }
 }

@@ -17,6 +17,10 @@
             android:key="backgroundimage_base64"
             android:title="@string/choose_file"/>
 
+        <Preference
+            android:key="remove_bg"
+            android:title="@string/remove_bg"/>
+
         <com.sms.sendsms.util.ImageViewPreference
             android:key="backgroundimage"
             android:title="@string/file_name"/>

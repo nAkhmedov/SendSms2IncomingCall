@@ -36,4 +36,8 @@ public class ImageViewPreference extends Preference {
         mPhoto = imageData;
         mImageView.setImageBitmap(imageData);
     }
+
+    public void removeImg() {
+        mImageView.setImageDrawable(null);
+    }
 }

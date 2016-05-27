@@ -2,8 +2,6 @@ package com.sms.sendsms.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -70,27 +68,6 @@ public class GeneralCardPreference extends PreferenceFragment {
     }
 
     private void resetAllLabelColor(String hexColor) {
-        business.setMailLabelColor(hexColor);
-        business.setFacebookLabelColor(hexColor);
-        business.setTwitterLabelColor(hexColor);
-        business.setLinkedinLabelColor(hexColor);
-        business.setGoogleplusLabelColor(hexColor);
-        business.setYoutubeLabelColor(hexColor);
-        business.setPhoneLabelColor(hexColor);
-        business.setGalleryLabelColor(hexColor);
-        business.setAboutLabelColor(hexColor);
-        business.setWebsiteLabelColor(hexColor);
-        business.setMapLabelColor(hexColor);
-        business.setPinterestLabelColor(hexColor);
-        business.setAndroidLabelColor(hexColor);
-        business.setUserplusLabelColor(hexColor);
-        business.setChatLabelColor(hexColor);
-
-        ApplicationLoader.getApplication(getActivity())
-                .getDaoSession()
-                .getBusinessDao()
-                .update(business);
-
         ((EditCardActivity) getActivity()).updateCard("mail_label_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("facebook_label_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("twitter_label_color", hexColor);
@@ -106,30 +83,11 @@ public class GeneralCardPreference extends PreferenceFragment {
         ((EditCardActivity) getActivity()).updateCard("android_label_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("userplus_label_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("chat_label_color", hexColor);
+
+        ((EditCardActivity) getActivity()).resendRequestData();
     }
 
     private void resetAllIconColor(String hexColor) {
-        business.setMailIconColor(hexColor);
-        business.setFacebookIconColor(hexColor);
-        business.setTwitterIconColor(hexColor);
-        business.setLinkedinIconColor(hexColor);
-        business.setGoogleplusIconColor(hexColor);
-        business.setYoutubeIconColor(hexColor);
-        business.setPhoneIconColor(hexColor);
-        business.setGalleryIconColor(hexColor);
-        business.setAboutIconColor(hexColor);
-        business.setWebsiteIconColor(hexColor);
-        business.setMapIconColor(hexColor);
-        business.setPinterestIconColor(hexColor);
-        business.setAndroidIconColor(hexColor);
-        business.setUserplusIconColor(hexColor);
-        business.setChatIconColor(hexColor);
-
-        ApplicationLoader.getApplication(getActivity())
-                .getDaoSession()
-                .getBusinessDao()
-                .update(business);
-
         ((EditCardActivity) getActivity()).updateCard("mail_icon_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("facebook_icon_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("twitter_icon_color", hexColor);
@@ -145,6 +103,8 @@ public class GeneralCardPreference extends PreferenceFragment {
         ((EditCardActivity) getActivity()).updateCard("android_icon_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("userplus_icon_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("chat_icon_color", hexColor);
+
+        ((EditCardActivity) getActivity()).resendRequestData();
     }
 
     @Override

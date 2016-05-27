@@ -7,4 +7,9 @@
         android:title="@string/menu_send_report"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/item_settings"
+        android:title="@string/settings"
+        app:showAsAction="never"/>
+
 </menu>

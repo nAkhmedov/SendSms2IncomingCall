@@ -2,8 +2,10 @@ package com.sms.sendsms.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -79,50 +81,8 @@ public  class EditCardActivity extends BaseCEActivity {
         }
     }
 
-    public void updateCard(String property, boolean ifValue) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("value", ifValue);
-        sendRequest2Api(property, jsonObject);
-    }
-
-    public void updateCard(String property, String value) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("value", value);
-        sendRequest2Api(property, jsonObject);
-    }
-
-    private void sendRequest2Api(String property, JsonObject jsonObject) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .build();
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ContextConstants.APP_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client)
-                .build();
-        CustomHTTPService http = retrofit.create(CustomHTTPService.class);
-
-        http.sendCardData(user.getGuid(), property, jsonObject).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                LOGGER.info("CHECKING response = " + response);
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable error) {
-                LOGGER.info("CHECKING error = " + error);
-            }
-        });
-    }
-
     private void sendRequest2Data() {
         showDialog();
-
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -153,6 +113,10 @@ public  class EditCardActivity extends BaseCEActivity {
                 error.printStackTrace();
             }
         });
+    }
+
+    public void resendRequestData() {
+        sendRequest2Data();
     }
 
     private void parseJson(final JsonObject jsonObject) {
@@ -266,7 +230,49 @@ public  class EditCardActivity extends BaseCEActivity {
         }).start();
     }
 
+    public void updateCard(String property, boolean ifValue) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", ifValue);
+        sendRequest2Api(property, jsonObject);
+    }
+
+    public void updateCard(String property, String value) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", value);
+        sendRequest2Api(property, jsonObject);
+    }
+
+    private void sendRequest2Api(String property, JsonObject jsonObject) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ContextConstants.APP_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+        CustomHTTPService http = retrofit.create(CustomHTTPService.class);
+
+        http.sendCardData(user.getGuid(), property, jsonObject).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                LOGGER.info("CHECKING response = " + response);
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable error) {
+                LOGGER.info("CHECKING error = " + error);
+            }
+        });
+    }
+
     public void uploadFile2Api(String property, MultipartBody.Part multipartBody) {
+        showCustomDialog(getResources().getString(R.string.uploading));
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -285,11 +291,23 @@ public  class EditCardActivity extends BaseCEActivity {
         http.uploadFile(user.getGuid(), property, multipartBody).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                dismissDialog();
                 LOGGER.info("CHECKING response2 = " + response);
+                if (response.isSuccessful()) {
+                    resendRequestData();
+                }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable error) {
+            public void onFailure(Call<ResponseBody> call, final Throwable error) {
+                dismissDialog();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(EditCardActivity.this, getResources().getString(R.string.cant_upload), Toast.LENGTH_LONG).show();
+                    }
+                });
+                error.printStackTrace();
                 LOGGER.info("CHECKING error2 = " + error);
             }
         });

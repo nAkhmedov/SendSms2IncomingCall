@@ -74,7 +74,7 @@ public class KeepAliveAlarmReceiver extends BroadcastReceiver {
                     } else {
                         Calendar thatDay = Calendar.getInstance();
                         thatDay.setTime(user.getDisabledDate());
-                        if (DateUtil.isMoreThan3Days(thatDay)) {
+                        if (DateUtil.isMoreThanSelectedDays(thatDay, ContextConstants.THREE_DAY_PERIOD)) {
                             logoutUser();
                             return;
                         }

@@ -1,5 +1,6 @@
 package com.sms.sendsms.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         final ListPreference sendSmsPeriod = (ListPreference) findPreference("send_sms_period");
+        String period = prefs.getString("send_sms_period", getString(R.string.everytime));
+        sendSmsPeriod.setSummary(period);
 
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {

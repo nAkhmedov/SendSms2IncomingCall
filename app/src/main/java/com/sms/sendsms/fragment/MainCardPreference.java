@@ -1,35 +1,15 @@
 package com.sms.sendsms.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import com.google.gson.JsonObject;
-import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
-import com.sms.sendsms.activity.EditCardActivity;
 import com.sms.sendsms.constants.ContextConstants;
-import com.sms.sendsms.database.Business;
-import com.sms.sendsms.execution.CustomHTTPService;
-import com.sms.sendsms.util.ImageUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Navruz on 10.05.2016.

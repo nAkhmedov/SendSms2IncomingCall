@@ -1,103 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/main_layout"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="20dp">
-
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="150dp"
-        android:layout_height="120dp"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/logo"/>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/main_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-        <TextView
-            android:id="@+id/enable_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/enable_service"
-            android:padding="5dp"/>
-        <Switch
-            android:id="@+id/toggle_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/enable_service"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@id/enable_service"
-            android:checked="true"
-            android:layout_alignParentRight="true"
-            android:padding="5dp"/>
-        <TextView
-            android:id="@+id/notify_sending"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/notify_send"
-            android:layout_below="@id/enable_service"
-            android:layout_marginTop="15dp"
-            android:padding="5dp"/>
-        <Switch
-            android:id="@+id/toggle_ntf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toggle_service"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
-            android:checked="true"
-            android:padding="5dp"/>
-        <Button
-            android:id="@+id/edit_black_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/notify_sending"
-            android:text="@string/edit_black_list"
-            android:layout_marginTop="10dp"
-            android:onClick="startBlockActivity"
-            android:padding="5dp"/>
-        <Button
-            android:id="@+id/show_reports"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/edit_black_list"
-            android:text="@string/show_reports"
-            android:layout_marginTop="15dp"
-            android:onClick="showSmsReports"
-            android:padding="5dp"/>
+        android:padding="20dp">
 
-        <Button
-            android:id="@+id/edit_card"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/show_reports"
-            android:text="@string/edit_card"
-            android:layout_marginTop="15dp"
-            android:onClick="showEditCard"
-            android:padding="5dp"/>
+            android:layout_below="@id/logo"
+            android:paddingTop="10dp"
+            android:layout_centerInParent="true">
+            <TextView
+                android:id="@+id/enable_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enable_service"
+                android:padding="5dp"/>
+            <Switch
+                android:id="@+id/toggle_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/enable_service"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@id/enable_service"
+                android:checked="true"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"/>
 
-        <TextView
-            android:id="@+id/preview"
+            <Switch
+                android:id="@+id/toggle_ntf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toggle_service"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:checked="true"
+                android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/notify_sending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notify_send"
+                android:layout_below="@id/enable_service"
+                android:layout_toLeftOf="@id/toggle_ntf"
+                android:layout_toStartOf="@id/toggle_ntf"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="15dp"
+                android:padding="5dp"/>
+
+            <Button
+                android:id="@+id/edit_black_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/notify_sending"
+                android:text="@string/edit_black_list"
+                android:layout_marginTop="10dp"
+                android:onClick="startBlockActivity"
+                android:padding="5dp"/>
+            <Button
+                android:id="@+id/show_reports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edit_black_list"
+                android:text="@string/show_reports"
+                android:layout_marginTop="15dp"
+                android:onClick="showSmsReports"
+                android:padding="5dp"/>
+
+            <Button
+                android:id="@+id/edit_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_reports"
+                android:text="@string/edit_card"
+                android:layout_marginTop="15dp"
+                android:onClick="showEditCard"
+                android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edit_card"
+                android:gravity="center"
+                android:paddingTop="15dp"
+                android:textSize="15dp"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="150dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            android:src="@drawable/logo"/>
+        <Button
+            android:id="@+id/log_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_card"
-            android:gravity="center"
-            android:paddingTop="15dp"
-            android:textSize="15dp"/>
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/logout"/>
     </RelativeLayout>
-    <Button
-        android:id="@+id/log_out"
-        android:layout_margin="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/logout"/>
 
-</RelativeLayout>
+</ScrollView>

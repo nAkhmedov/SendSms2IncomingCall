@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseCEActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseCEActivity.class);
-    private ProgressDialog dialog;
+    private static ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +39,12 @@ public abstract class BaseCEActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dialog = new ProgressDialog(BaseCEActivity.this);
-                dialog.setMessage(getResources().getString(R.string.loading));
-                dialog.setCancelable(false);
-                dialog.show();
+                if (dialog == null) {
+                    dialog = new ProgressDialog(BaseCEActivity.this);
+                    dialog.setMessage(getResources().getString(R.string.loading));
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }
             }
         });
     }
@@ -51,10 +53,12 @@ public abstract class BaseCEActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                dialog = new ProgressDialog(BaseCEActivity.this);
-                dialog.setMessage(text);
-                dialog.setCancelable(false);
-                dialog.show();
+                if (dialog == null) {
+                    dialog = new ProgressDialog(BaseCEActivity.this);
+                    dialog.setMessage(text);
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }
             }
         });
     }
@@ -62,6 +66,7 @@ public abstract class BaseCEActivity extends AppCompatActivity {
     public void dismissDialog() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+            dialog = null;
         }
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.sms.sendsms"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.sms.sendsms"
+          android:installLocation="internalOnly">
 
     <!--used for write logs to file in debug-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

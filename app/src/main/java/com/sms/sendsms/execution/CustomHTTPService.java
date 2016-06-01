@@ -22,7 +22,7 @@ public interface CustomHTTPService {
     Call<String> sendAuthRequest(@Query("username") String username, @Query("password") String password, @Query("action") String newLogin);
 
     @GET("login.asp")
-    Call<String> sendMessageBodyRequest(@Query("action") String action, @Query("code") String code);
+    Call<ResponseBody> sendMessageBodyRequest(@Query("action") String action, @Query("code") String code);
 
     @GET("read.asp")
     Call<JsonObject> sendBusinessDetailRequest(@Query("code") String code);

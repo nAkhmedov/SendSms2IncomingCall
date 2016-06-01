@@ -31,8 +31,10 @@ import com.sms.sendsms.util.NullOnEmptyConverterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -143,11 +145,11 @@ public class LoginActivity extends AppCompatActivity {
 //            mAuthTask.execute((Void) null);
 
             try {
-                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
-                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+//                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(interceptor)
-                    .build();
+//                    .addInterceptor(interceptor)
+                        .build();
 
                 Gson gson = new GsonBuilder()
                         .setLenient()
@@ -176,34 +178,68 @@ public class LoginActivity extends AppCompatActivity {
                         final String[] result = body.trim().split("\\|");
                         final String resultCode = result[0];
                         final String guid = result[1];
-                        http.sendMessageBodyRequest("getsms", resultCode).enqueue(new Callback<String>() {
+                        http.sendMessageBodyRequest("getsms", resultCode).enqueue(new Callback<ResponseBody>() {
                             @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                String messageBody = response.body();
-                                if (messageBody == null || messageBody.isEmpty()) {
-                                    messageBody = "Empty string by server";
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                try {
+                                    byte[] messageBytes = response.body().bytes();
+                                    String messageBody = new String(messageBytes);
+                                    if (messageBody.isEmpty()) {
+                                        messageBody = "Empty string by server";
+                                    }
+                                    User user = new User();
+                                    user.setEmail(email);
+                                    user.setPassword(password);
+                                    user.setMessageCode(resultCode);
+                                    user.setMessageBody(messageBody);
+                                    user.setGuid(guid);
+                                    ApplicationLoader.getApplication(LoginActivity.this)
+                                            .getDaoSession()
+                                            .getUserDao()
+                                            .insert(user);
+                                    startMainActivity();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                                User user = new User();
-                                user.setEmail(email);
-                                user.setPassword(password);
-                                user.setMessageCode(resultCode);
-                                user.setMessageBody(messageBody);
-                                user.setGuid(guid);
-                                ApplicationLoader.getApplication(LoginActivity.this)
-                                        .getDaoSession()
-                                        .getUserDao()
-                                        .insert(user);
-                                startMainActivity();
+
                             }
 
                             @Override
-                            public void onFailure(Call<String> call, Throwable error) {
+                            public void onFailure(Call<ResponseBody> call, Throwable error) {
                                 showProgress(false);
                                 LOGGER.error("ERROR: Auth getMessageBody content = " + error + " messageError = " + error.getMessage());
                                 showMessage(error.getMessage());
                                 error.printStackTrace();
                             }
                         });
+//                        http.sendMessageBodyRequest("getsms", resultCode).enqueue(new Callback<String>() {
+//                            @Override
+//                            public void onResponse(Call<String> call, Response<String> response) {
+//                                String messageBody = response.body();
+//                                if (messageBody == null || messageBody.isEmpty()) {
+//                                    messageBody = "Empty string by server";
+//                                }
+//                                User user = new User();
+//                                user.setEmail(email);
+//                                user.setPassword(password);
+//                                user.setMessageCode(resultCode);
+//                                user.setMessageBody(messageBody);
+//                                user.setGuid(guid);
+//                                ApplicationLoader.getApplication(LoginActivity.this)
+//                                        .getDaoSession()
+//                                        .getUserDao()
+//                                        .insert(user);
+//                                startMainActivity();
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<String> call, Throwable error) {
+//                                showProgress(false);
+//                                LOGGER.error("ERROR: Auth getMessageBody content = " + error + " messageError = " + error.getMessage());
+//                                showMessage(error.getMessage());
+//                                error.printStackTrace();
+//                            }
+//                        });
                     }
 
                     @Override

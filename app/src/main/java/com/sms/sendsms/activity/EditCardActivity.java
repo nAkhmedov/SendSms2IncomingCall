@@ -1,9 +1,6 @@
 package com.sms.sendsms.activity;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -25,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,10 +79,10 @@ public  class EditCardActivity extends BaseCEActivity {
 
     private void sendRequest2Data() {
         showDialog();
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+//                .addInterceptor(interceptor)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ContextConstants.APP_URL)
@@ -111,11 +107,13 @@ public  class EditCardActivity extends BaseCEActivity {
                 dismissDialog();
                 LOGGER.error("Exception = " + error.getMessage());
                 error.printStackTrace();
+                Toast.makeText(EditCardActivity.this, getResources().getString(R.string.cant_get_card_items), Toast.LENGTH_LONG).show();
+                onBackPressed();
             }
         });
     }
 
-    public void resendRequestData() {
+    private void resendRequestData() {
         sendRequest2Data();
     }
 
@@ -123,6 +121,7 @@ public  class EditCardActivity extends BaseCEActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                LOGGER.info("Started parse business data");
                 final Business business = new Business();
                 business.setStoreCode(jsonObject.get("storecode").getAsString());
                 business.setBusinessName(jsonObject.get("businessname").getAsString());
@@ -233,20 +232,21 @@ public  class EditCardActivity extends BaseCEActivity {
     public void updateCard(String property, boolean ifValue) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", ifValue);
-        sendRequest2Api(property, jsonObject);
+        sendUpdateRequest(property, jsonObject);
     }
 
     public void updateCard(String property, String value) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", value);
-        sendRequest2Api(property, jsonObject);
+        sendUpdateRequest(property, jsonObject);
     }
 
-    private void sendRequest2Api(String property, JsonObject jsonObject) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    private void sendUpdateRequest(String property, JsonObject jsonObject) {
+        showCustomDialog(getResources().getString(R.string.updating_data));
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+//                .addInterceptor(interceptor)
                 .build();
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -261,22 +261,32 @@ public  class EditCardActivity extends BaseCEActivity {
         http.sendCardData(user.getGuid(), property, jsonObject).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
+                dismissDialog();
                 LOGGER.info("CHECKING response = " + response);
+                if (response.isSuccessful()) {
+                    resendRequestData();
+                }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable error) {
+                dismissDialog();
                 LOGGER.info("CHECKING error = " + error);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(EditCardActivity.this, getResources().getString(R.string.cant_update_data), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
     }
 
     public void uploadFile2Api(String property, MultipartBody.Part multipartBody) {
-        showCustomDialog(getResources().getString(R.string.uploading));
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+//                .addInterceptor(interceptor)
                 .build();
         Gson gson = new GsonBuilder()
                 .setLenient()

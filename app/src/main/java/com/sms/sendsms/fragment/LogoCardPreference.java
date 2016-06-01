@@ -8,11 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
@@ -21,9 +19,11 @@ import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
 import com.sms.sendsms.database.User;
 import com.sms.sendsms.execution.CustomHTTPService;
+import com.sms.sendsms.util.AndroidUtils;
 import com.sms.sendsms.util.ImageUtil;
 import com.sms.sendsms.util.ImageViewPreference;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,6 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +47,7 @@ import retrofit2.Retrofit;
  */
 public class LogoCardPreference extends BaseCEFragment implements Preference.OnPreferenceClickListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogoCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;
@@ -95,18 +94,23 @@ public class LogoCardPreference extends BaseCEFragment implements Preference.OnP
     }
 
     private void downloadCurrentLogo() {
-        showDialog(getActivity());
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+//                .addInterceptor(interceptor)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ContextConstants.CARD_URL)
                 .client(client)
                 .build();
         CustomHTTPService downloadService = retrofit.create(CustomHTTPService.class);
-        String fileUrl = "images/" + business.getLogo();
+        String fileName = business.getLogo();
+        if (fileName == null || fileName.isEmpty()) {
+            LOGGER.info("no need to download logo fileName = " + fileName);
+            return;
+        }
+        String fileUrl = "images/" + fileName;
+        showDialog(getActivity());
         Call<ResponseBody> call = downloadService.getBgImg(fileUrl);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -132,6 +136,7 @@ public class LogoCardPreference extends BaseCEFragment implements Preference.OnP
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable error) {
                 dismissDialog();
+                setLogoImg2Ui(null);
                 error.printStackTrace();
                 LOGGER.error("error = " + error.getMessage());
             }
@@ -197,11 +202,21 @@ public class LogoCardPreference extends BaseCEFragment implements Preference.OnP
         switch(requestCode) {
             case ContextConstants.SELECT_LOGO_IMG:
                 if(resultCode == getActivity().RESULT_OK){
+                    ((EditCardActivity) getActivity()).showCustomDialog(getResources().getString(R.string.uploading));
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             Uri selectedImage = intent.getData();
                             try {
+                                String resizedImgPath = ImageUtil.downScaleAndSaveImage(AndroidUtils.getPath(selectedImage), -1);
+                                if (resizedImgPath != null) {
+                                    File resizedImg = new File(resizedImgPath);
+                                    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), resizedImg);
+                                    MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file1", "fileName", requestFile);
+                                    ((EditCardActivity) getActivity()).uploadFile2Api("logo", multipartBody);
+                                    Bitmap imageBitmap = BitmapFactory.decodeStream(FileUtils.openInputStream(resizedImg));
+                                    setLogoImg2Ui(imageBitmap);
+                                }
                                 InputStream imageStream = getActivity().getContentResolver().openInputStream(selectedImage);
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                 Bitmap imageBitmap = BitmapFactory.decodeStream(imageStream);
@@ -211,7 +226,7 @@ public class LogoCardPreference extends BaseCEFragment implements Preference.OnP
                                 MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file1", "fileName", requestFile);
                                 ((EditCardActivity) getActivity()).uploadFile2Api("logo", multipartBody);
                                 setLogoImg2Ui(imageBitmap);
-                            } catch (FileNotFoundException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }

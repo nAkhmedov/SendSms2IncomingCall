@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
@@ -62,6 +63,7 @@ public class SendSmsService extends Service {
     private AlarmManager alarmManager;
     private TelephonyManager telephony;
     private PendingIntent keepAlivePendingIntent;
+    private SharedPreferences prefs;
 
 
     @Override
@@ -72,6 +74,8 @@ public class SendSmsService extends Service {
                 = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(SendSmsService.this);
 
         LOGGER.info("registering incomingCallReceiver receiver");
         LOGGER.info("registering receiver: SMS_SEND");
@@ -238,57 +242,68 @@ public class SendSmsService extends Service {
             return;
         }
 
-//        List<SmsLog> smsList = ApplicationLoader.getApplication(this)
-//                .getDaoSession()
-//                .getSmsLogDao()
-//                .queryBuilder()
-//                .where(SmsLogDao.Properties.SentNumber.eq(phoneNumber))
-//                .orderDesc(SmsLogDao.Properties.SentDate)
-//                .build()
-//                .list();
-//        Resources res = getResources();
-//        String period = sharedPref.getString("send_sms_period", res.getString(R.string.everytime));
-//        String everytime = res.getString(R.string.everytime);
-//        String onceADay = res.getString(R.string.once_day);
-//        String onceAWeek = res.getString(R.string.once_week);
-//        String onceAMonth = res.getString(R.string.once_month);
-//        long settingsPeriod = 0;
-//        if (period.equals(everytime)) {
-//            settingsPeriod = ContextConstants.EVERYTIME_PERIOD;
-//        } else if (period.equals(onceADay)) {
-//            settingsPeriod = ContextConstants.ONE_DAY_PERIOD;
-//        } else if (period.equals(onceAWeek)) {
-//            settingsPeriod = ContextConstants.WEEK_DAY_PERIOD;
-//        } else {
-//            settingsPeriod = ContextConstants.MONTH_DAY_PERIOD;
-//        }
-//
-//        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy h:mm a");
-//        try {
-//            Date date = format.parse(smsList.get(0).getSentDate());
-//            Calendar thatDay = Calendar.getInstance();
-//            thatDay.setTime(date);
-//            if (settingsPeriod != ContextConstants.EVERYTIME_PERIOD &&
-//                    DateUtil.isMoreThanSelectedDays(thatDay, settingsPeriod)) {
-//
-//            }
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+        List<SmsLog> smsList = ApplicationLoader.getApplication(this)
+                .getDaoSession()
+                .getSmsLogDao()
+                .queryBuilder()
+                .where(SmsLogDao.Properties.SentNumber.eq(phoneNumber))
+                .build()
+                .list();
+        int smsListSize = smsList.size();
+        if (smsListSize > 0) {
+            Resources res = getResources();
+            String period = prefs.getString("send_sms_period", res.getString(R.string.everytime));
+            String everytime = res.getString(R.string.everytime);
+            String onceADay = res.getString(R.string.once_day);
+            String onceAWeek = res.getString(R.string.once_week);
+            String onceAMonth = res.getString(R.string.once_month);
+            long settingsPeriod = 0;
+            if (period.equals(everytime)) {
+                settingsPeriod = ContextConstants.EVERYTIME_PERIOD;
+            } else if (period.equals(onceADay)) {
+                settingsPeriod = ContextConstants.ONE_DAY_PERIOD;
+            } else if (period.equals(onceAWeek)) {
+                settingsPeriod = ContextConstants.WEEK_DAY_PERIOD;
+            } else {
+                settingsPeriod = ContextConstants.MONTH_DAY_PERIOD;
+            }
+
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy h:mm a");
+                Date date = format.parse(smsList.get(smsListSize - 1).getSentDate());
+                Calendar thatDay = Calendar.getInstance();
+                thatDay.setTime(date);
+                if (settingsPeriod != ContextConstants.EVERYTIME_PERIOD &&
+                        !DateUtil.isMoreThanSelectedDays(thatDay, settingsPeriod)) {
+                    LOGGER.info("SEND SMS PERIOD = " + settingsPeriod +  " LAST SENT SMS date = " + date.toString());
+                    return;
+
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            LOGGER.info("It is the first time to send sms size = " + smsList.size());
+        }
 
         LOGGER.info("Sending probable success ");
         recipientNumber = phoneNumber;
-        SmsManager manager = SmsManager.getDefault();
+        SmsManager smsManager = SmsManager.getDefault();
 
         PendingIntent piSend = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
         PendingIntent piDelivered = PendingIntent.getBroadcast(this, 0, new Intent(SMS_DELIVERED), 0);
 
-        ArrayList<String> messageList = manager.divideMessage(messageText);
-        ArrayList<PendingIntent> sendList = new ArrayList<>(1);
-        sendList.add(piSend);
-        ArrayList<PendingIntent> deliverList = new ArrayList<>(1);
-        sendList.add(piDelivered);
+        ArrayList<String> parts = smsManager.divideMessage(messageText);
 
-        manager.sendMultipartTextMessage(phoneNumber, null, messageList, sendList, deliverList);
+        int partsCount = parts.size();
+        ArrayList<PendingIntent> sentIntents = new ArrayList<>(partsCount);
+        ArrayList<PendingIntent> deliveryIntents = new ArrayList<>(partsCount);
+
+        for (int i = 0; i < partsCount; i++) {
+            sentIntents.add(i, piSend);
+            deliveryIntents.add(i, piDelivered);
+        }
+
+        smsManager.sendMultipartTextMessage(phoneNumber, null, parts, sentIntents, deliveryIntents);
     }
 }

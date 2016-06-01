@@ -13,6 +13,6 @@ public class DateUtil {
         Calendar today = Calendar.getInstance();
         long diff = today.getTimeInMillis() - thatDay.getTimeInMillis(); //result in millis
         long days = diff / (24 * 60 * 60 * 1000);
-        return days > givenDay;
+        return days >= givenDay;
     }
 }

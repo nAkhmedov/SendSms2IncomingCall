@@ -22,9 +22,11 @@ import com.sms.sendsms.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,11 +65,13 @@ public class KeepAliveAlarmReceiver extends BroadcastReceiver {
 
         LOGGER.info("Sending getsms request...");
         CustomHTTPService http = retrofit.create(CustomHTTPService.class);
-        http.sendMessageBodyRequest("getsms", user.getMessageCode()).enqueue(new Callback<String>() {
+        http.sendMessageBodyRequest("getsms", user.getMessageCode()).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String messageBody = response.body();
-                if (messageBody == null || messageBody.isEmpty()) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    byte[] messageBytes = response.body().bytes();
+                    String messageBody = new String(messageBytes);
+                    if (messageBody == null || messageBody.isEmpty()) {
                     LOGGER.info("Disabled date = " + user.getDisabledDate());
                     if (user.getDisabledDate() == null) {
                         user.setDisabledDate(new Date());
@@ -88,10 +92,13 @@ public class KeepAliveAlarmReceiver extends BroadcastReceiver {
                         .getDaoSession()
                         .getUserDao()
                         .update(user);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable error) {
+            public void onFailure(Call<ResponseBody> call, Throwable error) {
                 LOGGER.error("ERROR: getMessageBody content = " + error + " messageError = " + error.getMessage());
                 error.printStackTrace();
             }

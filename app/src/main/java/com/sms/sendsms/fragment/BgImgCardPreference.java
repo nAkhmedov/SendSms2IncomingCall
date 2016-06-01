@@ -1,27 +1,27 @@
 package com.sms.sendsms.fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.view.MenuItem;
 
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
+import com.sms.sendsms.activity.BaseCEActivity;
 import com.sms.sendsms.activity.EditCardActivity;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
 import com.sms.sendsms.database.User;
 import com.sms.sendsms.execution.CustomHTTPService;
+import com.sms.sendsms.util.AndroidUtils;
 import com.sms.sendsms.util.ImageUtil;
 import com.sms.sendsms.util.ImageViewPreference;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,6 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -85,18 +84,23 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
     }
 
     private void downloadCurrentBgImg() {
-        showDialog(getActivity());
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+//                .addInterceptor(interceptor)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ContextConstants.CARD_URL)
                 .client(client)
                 .build();
         CustomHTTPService downloadService = retrofit.create(CustomHTTPService.class);
-        String fileUrl = "images/" + business.getBackgroundImage();
+        String fileName = business.getBackgroundImage();
+        if (fileName == null || fileName.isEmpty()) {
+            LOGGER.info("no need to download background fileName = " + fileName);
+            return;
+        }
+        showDialog(getActivity());
+        String fileUrl = "images/" + fileName;
         Call<ResponseBody> call = downloadService.getBgImg(fileUrl);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -122,6 +126,7 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 dismissDialog();
+                setBgImg2Ui(null);
                 t.printStackTrace();
                 LOGGER.error("error = " + t.getMessage());
             }
@@ -152,7 +157,6 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
             case "remove_bg": {
                 bgImgdRes.removeImg();
                 ((EditCardActivity) getActivity()).updateCard("backgroundimage", "");
-                ((EditCardActivity) getActivity()).resendRequestData();
             }
         }
         return false;
@@ -164,24 +168,32 @@ public class BgImgCardPreference extends BaseCEFragment implements Preference.On
         switch(requestCode) {
             case ContextConstants.SELECT_BG_IMG:
                 if(resultCode == getActivity().RESULT_OK){
+                    ((EditCardActivity) getActivity()).showCustomDialog(getResources().getString(R.string.uploading));
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             Uri selectedImage = intent.getData();
                             try {
-                                InputStream imageStream = getActivity().getContentResolver().openInputStream(selectedImage);
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                Bitmap imageBitmap = BitmapFactory.decodeStream(imageStream);
-                                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                                byte[] bytes = baos.toByteArray();
-                                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), bytes);
-                                MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file1", "fileName", requestFile);
-
-//                        String base64String = ImageUtil.encodeToBase64(imageBitmap);
-//                        LOGGER.info("JSON = " + base64String);
-                                ((EditCardActivity) getActivity()).uploadFile2Api("backgroundimage_base64", multipartBody);
-                                setBgImg2Ui(imageBitmap);
-                            } catch (FileNotFoundException e) {
+                                String resizedImgPath = ImageUtil.downScaleAndSaveImage(AndroidUtils.getPath(selectedImage), -1);
+                                if (resizedImgPath != null) {
+                                    File resizedImg = new File(resizedImgPath);
+                                    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), resizedImg);
+                                    MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file1", "fileName", requestFile);
+                                    ((EditCardActivity) getActivity()).uploadFile2Api("backgroundimage_base64", multipartBody);
+                                    Bitmap imageBitmap = BitmapFactory.decodeStream(FileUtils.openInputStream(resizedImg));
+                                    setBgImg2Ui(imageBitmap);
+                                }
+//                                InputStream imageStream = getActivity().getContentResolver().openInputStream(selectedImage);
+//                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                                Bitmap imageBitmap = BitmapFactory.decodeStream(imageStream);
+//                                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                                byte[] bytes = baos.toByteArray();
+//                                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), bytes);
+//                                MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file1", "fileName", requestFile);
+//
+//                                ((EditCardActivity) getActivity()).uploadFile2Api("backgroundimage_base64", multipartBody);
+//                                setBgImg2Ui(imageBitmap);
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }

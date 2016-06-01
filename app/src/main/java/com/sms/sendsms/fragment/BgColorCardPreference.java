@@ -3,13 +3,10 @@ package com.sms.sendsms.fragment;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
-import com.google.gson.JsonObject;
 import com.rarepebble.colorpicker.ColorPreference;
 import com.sms.sendsms.R;
 import com.sms.sendsms.activity.EditCardActivity;
@@ -23,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BgColorCardPreference extends PreferenceFragment {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BgColorCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;

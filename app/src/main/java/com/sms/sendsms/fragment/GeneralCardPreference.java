@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import com.rarepebble.colorpicker.ColorPreference;
-import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
 import com.sms.sendsms.activity.EditCardActivity;
 import com.sms.sendsms.database.Business;
@@ -83,8 +82,6 @@ public class GeneralCardPreference extends PreferenceFragment {
         ((EditCardActivity) getActivity()).updateCard("android_label_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("userplus_label_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("chat_label_color", hexColor);
-
-        ((EditCardActivity) getActivity()).resendRequestData();
     }
 
     private void resetAllIconColor(String hexColor) {
@@ -103,8 +100,6 @@ public class GeneralCardPreference extends PreferenceFragment {
         ((EditCardActivity) getActivity()).updateCard("android_icon_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("userplus_icon_color", hexColor);
         ((EditCardActivity) getActivity()).updateCard("chat_icon_color", hexColor);
-
-        ((EditCardActivity) getActivity()).resendRequestData();
     }
 
     @Override

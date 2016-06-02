@@ -27,15 +27,30 @@ import com.sms.sendsms.R;
 import com.sms.sendsms.constants.ActionNames;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.User;
+import com.sms.sendsms.execution.CustomHTTPService;
 import com.sms.sendsms.service.SendSmsService;
+import com.sms.sendsms.util.FileUtil;
+import com.sms.sendsms.util.LogCatDumpReader;
 import com.sms.sendsms.util.ReportHelper;
 import com.sms.sendsms.util.ServiceDetector;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by Navruz on 29.03.2016.
@@ -49,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout mainLayout;
     private ReportHelper reportHelper;
     private User user;
+
+    private final static String LOG_EXT = "log";
+    private final static String ERROR_LOG_PREFIX = "error";
+    private final static String MAIN_LOG_PREFIX = "main";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,26 +228,60 @@ public class MainActivity extends AppCompatActivity {
     private void sendReport() {
         reportHelper = new ReportHelper(ApplicationLoader.getAppContext());
         try {
-            final File reportFile = reportHelper.createReport();
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("message/rfc822");
-            intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"info@yesplease.co.il"});
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Hi there");
-            intent.putExtra(Intent.EXTRA_TEXT   , "Feedback");
-            intent.putExtra(Intent.EXTRA_STREAM   , Uri.parse("file://" + reportFile));
-            startActivityForResult(Intent.createChooser(intent, "Send report..."), ContextConstants.REPORT_REQUEST_CODE);
+//            final File reportFile = reportHelper.createReport();
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                    .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(ContextConstants.APP_URL)
+                    .client(client)
+                    .build();
+            CustomHTTPService http = retrofit.create(CustomHTTPService.class);
+
+//            RequestBody requestFile = RequestBody.create(MediaType.parse("application/zip"), reportFile);
+//            MultipartBody.Part multipartBody = MultipartBody.Part
+//                    .createFormData("archive", reportFile.getName(), requestFile);
+
+            File mainLogFile = new File(ContextConstants.DATA_PATH + File.separator + "logs" + File.separator + MAIN_LOG_PREFIX + "." + LOG_EXT);
+//            File errorLogFile = new File(ContextConstants.DATA_PATH + File.separator + "logs" + File.separator + ERROR_LOG_PREFIX + "." + LOG_EXT);
+            String logcatReport = LogCatDumpReader.read();
+            Call<ResponseBody> call = http.sendReport(FileUtils.readFileToString(mainLogFile), logcatReport);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        Snackbar.make(mainLayout, getString(R.string.report_send_successfully), Snackbar.LENGTH_LONG).show();
+                        reportHelper.deleteReportDir();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Snackbar.make(mainLayout, getString(R.string.report_send_failed), Snackbar.LENGTH_LONG).show();
+                }
+            });
+//            Intent intent = new Intent(Intent.ACTION_SEND);
+//            intent.setType("message/rfc822");
+//            intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"info@yesplease.co.il"});
+//            intent.putExtra(Intent.EXTRA_SUBJECT, "Hi there");
+//            intent.putExtra(Intent.EXTRA_TEXT   , "Feedback");
+//            intent.putExtra(Intent.EXTRA_STREAM   , Uri.parse("file://" + reportFile));
+//            startActivityForResult(Intent.createChooser(intent, "Send report..."), ContextConstants.REPORT_REQUEST_CODE);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (android.content.ActivityNotFoundException ex) {
-            Snackbar.make(mainLayout, getString(R.string.no_mail_client), Snackbar.LENGTH_LONG).show();
         }
+//        catch (android.content.ActivityNotFoundException ex) {
+//            Snackbar.make(mainLayout, getString(R.string.no_mail_client), Snackbar.LENGTH_LONG).show();
+//        }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ContextConstants.REPORT_REQUEST_CODE) {
-            LOGGER.info("Deleted created report file");
-            reportHelper.deleteReportDir();
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == ContextConstants.REPORT_REQUEST_CODE) {
+//            LOGGER.info("Deleted created report file");
+//            reportHelper.deleteReportDir();
+//        }
+//    }
 }

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MainTextCardPreference extends PreferenceFragment {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainTextCardPreference.class);
 
     public static SharedPreferences.OnSharedPreferenceChangeListener listener;
     private SharedPreferences prefs = null;

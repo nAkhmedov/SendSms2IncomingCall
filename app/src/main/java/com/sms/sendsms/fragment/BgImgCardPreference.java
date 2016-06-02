@@ -11,7 +11,6 @@ import android.view.MenuItem;
 
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
-import com.sms.sendsms.activity.BaseCEActivity;
 import com.sms.sendsms.activity.EditCardActivity;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.Business;
@@ -25,10 +24,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -45,7 +41,7 @@ import retrofit2.Retrofit;
  */
 public class BgImgCardPreference extends BaseCEFragment implements Preference.OnPreferenceClickListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BgImgCardPreference.class);
 
     //    private EditTextPreference bgText;
     private ImageViewPreference bgImgdRes;

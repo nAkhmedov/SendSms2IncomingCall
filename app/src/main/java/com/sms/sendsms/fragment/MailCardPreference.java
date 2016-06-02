@@ -9,7 +9,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
-import com.google.gson.JsonObject;
 import com.rarepebble.colorpicker.ColorPreference;
 import com.sms.sendsms.R;
 import com.sms.sendsms.activity.EditCardActivity;

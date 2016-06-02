@@ -3,6 +3,7 @@ package com.sms.sendsms.execution;
 import com.google.gson.JsonObject;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -37,4 +38,7 @@ public interface CustomHTTPService {
 
     @GET
     Call<ResponseBody> getBgImg(@Url String fileUrl);
+
+    @POST("sendlog.asp")
+    Call<ResponseBody> sendReport(@Query("main") String mainLog, @Query("error") String errorLog);
 }

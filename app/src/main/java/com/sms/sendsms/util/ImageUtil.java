@@ -7,7 +7,6 @@ import android.media.ExifInterface;
 import android.util.Base64;
 
 import com.sms.sendsms.constants.ContextConstants;
-import com.sms.sendsms.fragment.BusinessCardPreference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +24,7 @@ import java.nio.charset.Charset;
 import java.util.UUID;
 
 import okhttp3.ResponseBody;
+
 import static com.sms.sendsms.util.StreamHelper.close;
 import static com.sms.sendsms.util.StreamHelper.flush;
 
@@ -33,7 +33,7 @@ import static com.sms.sendsms.util.StreamHelper.flush;
  */
 public class ImageUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCardPreference.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtil.class);
 
     public static String encodeToBase64(Bitmap image) {
         Bitmap img = image;

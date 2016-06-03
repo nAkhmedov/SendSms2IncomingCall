@@ -20,7 +20,7 @@ public class LogCatDumpReader {
 			return logBuilder.toString();
 		} catch (Exception e) {
 			//this shouldn't really happen, but who knows...
-			return "Exception occured while reading LogCat" + e.getMessage();
+			return "Exception occured while reading LogCat " + e.getMessage();
 			//e.printStackTrace();
 		}
 	}

@@ -128,4 +128,5 @@
     <string name="cant_get_card_items">Couldn\'t get card items possible reason is that  you have no internet.</string>
     <string name="report_send_successfully">The report has been sent. Thank you for your feedback.</string>
     <string name="report_send_failed">The report has not been sent. Possible reason - no internet connection.</string>
+    <string name="please_wait">Please wait...</string>
 </resources>

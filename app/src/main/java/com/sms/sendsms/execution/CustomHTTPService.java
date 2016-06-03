@@ -40,5 +40,5 @@ public interface CustomHTTPService {
     Call<ResponseBody> getBgImg(@Url String fileUrl);
 
     @POST("sendlog.asp")
-    Call<ResponseBody> sendReport(@Query("main") String mainLog, @Query("error") String errorLog);
+    Call<ResponseBody> sendReport(@Body JsonObject mainLog);
 }

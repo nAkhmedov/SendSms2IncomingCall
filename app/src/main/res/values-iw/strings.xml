@@ -127,4 +127,5 @@
     <string name="cant_get_card_items">לא ניתן להוריד פריטים. בדוק את חיבור האינטרנט שלך</string>
     <string name="report_send_successfully">הלוג נשלח. תודה על הפידבק.</string>
     <string name="report_send_failed">הלוג לא נשלח. בדוק את חיבור האינטרנט שלך.</string>
+    <string name="please_wait">אנא המתן...</string>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -223,61 +224,62 @@ public class MainActivity extends BaseCEActivity {
     }
 
     private void sendReport() {
-        showCustomDialog(getResources().getString(R.string.please_wait));
+//        showCustomDialog(getResources().getString(R.string.please_wait));
         reportHelper = new ReportHelper(ApplicationLoader.getAppContext());
         try {
-//            final File reportFile = reportHelper.createReport();
+            final File reportFile = reportHelper.createReport();
 //            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();//If need to logging, just uncomment
 //            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            OkHttpClient client = new OkHttpClient.Builder()
-//                    .addInterceptor(interceptor)
-                    .build();
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .create();
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(ContextConstants.APP_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client)
-                    .build();
-            CustomHTTPService http = retrofit.create(CustomHTTPService.class);
+//            OkHttpClient client = new OkHttpClient.Builder()
+////                    .addInterceptor(interceptor)
+//                    .build();
+//            Gson gson = new GsonBuilder()
+//                    .setLenient()
+//                    .create();
+//            Retrofit retrofit = new Retrofit.Builder()
+//                    .baseUrl(ContextConstants.APP_URL)
+//                    .addConverterFactory(GsonConverterFactory.create(gson))
+//                    .client(client)
+//                    .build();
+//            CustomHTTPService http = retrofit.create(CustomHTTPService.class);
+//
+////            RequestBody requestFile = RequestBody.create(MediaType.parse("application/zip"), reportFile);
+////            MultipartBody.Part multipartBody = MultipartBody.Part
+////                    .createFormData("archive", reportFile.getName(), requestFile);
+//
+//            File mainLogFile = new File(ContextConstants.DATA_PATH + File.separator + "logs" + File.separator + MAIN_LOG_PREFIX + "." + LOG_EXT);
+////            File errorLogFile = new File(ContextConstants.DATA_PATH + File.separator + "logs" + File.separator + ERROR_LOG_PREFIX + "." + LOG_EXT);
+//            String logcatReport = LogCatDumpReader.read();
+//            JsonObject logObject = new JsonObject();
+//            logObject.addProperty("main", FileUtils.readFileToString(mainLogFile));
+//            logObject.addProperty("error", logcatReport);
+//            Call<ResponseBody> call = http.sendReport(logObject);
+//            call.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                    dismissDialog();
+//                    if (response.isSuccessful()) {
+//                        Snackbar.make(mainLayout, getString(R.string.report_send_successfully), Snackbar.LENGTH_LONG).show();
+//                        reportHelper.deleteReportDir();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable error) {
+//                    dismissDialog();
+//                    error.printStackTrace();
+//                    LOGGER.error("SEnding report error = " + error.getMessage());
+//                    Snackbar.make(mainLayout, getString(R.string.report_send_failed), Snackbar.LENGTH_LONG).show();
+//                }
+//            });
 
-//            RequestBody requestFile = RequestBody.create(MediaType.parse("application/zip"), reportFile);
-//            MultipartBody.Part multipartBody = MultipartBody.Part
-//                    .createFormData("archive", reportFile.getName(), requestFile);
-
-            File mainLogFile = new File(ContextConstants.DATA_PATH + File.separator + "logs" + File.separator + MAIN_LOG_PREFIX + "." + LOG_EXT);
-//            File errorLogFile = new File(ContextConstants.DATA_PATH + File.separator + "logs" + File.separator + ERROR_LOG_PREFIX + "." + LOG_EXT);
-            String logcatReport = LogCatDumpReader.read();
-            JsonObject logObject = new JsonObject();
-            logObject.addProperty("main", FileUtils.readFileToString(mainLogFile));
-            logObject.addProperty("error", logcatReport);
-            Call<ResponseBody> call = http.sendReport(logObject);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    dismissDialog();
-                    if (response.isSuccessful()) {
-                        Snackbar.make(mainLayout, getString(R.string.report_send_successfully), Snackbar.LENGTH_LONG).show();
-                        reportHelper.deleteReportDir();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable error) {
-                    dismissDialog();
-                    error.printStackTrace();
-                    LOGGER.error("SEnding report error = " + error.getMessage());
-                    Snackbar.make(mainLayout, getString(R.string.report_send_failed), Snackbar.LENGTH_LONG).show();
-                }
-            });
-//            Intent intent = new Intent(Intent.ACTION_SEND);
-//            intent.setType("message/rfc822");
-//            intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"info@yesplease.co.il"});
-//            intent.putExtra(Intent.EXTRA_SUBJECT, "Hi there");
-//            intent.putExtra(Intent.EXTRA_TEXT   , "Feedback");
-//            intent.putExtra(Intent.EXTRA_STREAM   , Uri.parse("file://" + reportFile));
-//            startActivityForResult(Intent.createChooser(intent, "Send report..."), ContextConstants.REPORT_REQUEST_CODE);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("message/rfc822");
+            intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{ContextConstants.REPORT_ADDRESS});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Hi there");
+            intent.putExtra(Intent.EXTRA_TEXT   , "Feedback");
+            intent.putExtra(Intent.EXTRA_STREAM   , Uri.parse("file://" + reportFile));
+            startActivityForResult(Intent.createChooser(intent, "Send report..."), ContextConstants.REPORT_REQUEST_CODE);
         } catch (IOException e) {
             dismissDialog();
             LOGGER.error("Sending report error = " + e.getMessage());

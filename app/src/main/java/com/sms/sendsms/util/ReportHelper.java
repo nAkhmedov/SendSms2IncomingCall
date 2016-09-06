@@ -27,7 +27,7 @@ public class ReportHelper {
     private final static String SYSTEMINFO_FILE = "system_info.txt";
     private final static String ERROR_LOG_PREFIX = "error";
     private final static String MAIN_LOG_PREFIX = "main";
-    private final static String REPORT_FILE = "report.zip";
+    private final static String REPORT_FILE = "report.zis";
     private final static int    LOG_DAYS = 5;
 
     private Context context;

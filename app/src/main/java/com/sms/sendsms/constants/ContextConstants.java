@@ -43,4 +43,5 @@ public class ContextConstants {
     public final static String TAG_FRAGMENT_ANDR_CARD = "TAG_FRAGMENT_ANDR_CARD";
     public final static String TAG_FRAGMENT_USER_PLUS_CARD = "TAG_FRAGMENT_USER_PLUS_CARD";
     public final static String TAG_FRAGMENT_SETTINGS = "TAG_FRAGMENT_SETTINGS";
+    public static final String REPORT_ADDRESS = "Leads@yesplease.co.il";
 }

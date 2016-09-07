@@ -4,6 +4,8 @@ import com.sms.sendsms.ApplicationLoader;
 
 public class ContextConstants {
 
+    public static final String PACKAGE_NAME = ApplicationLoader.getAppContext().getPackageName();
+
     public static final String APP_URL = "http://www.yesplease.co.il/app/";
     public static final String CARD_URL = "http://www.yes-please.co.il/card/";
     public static final String DATA_PATH = ApplicationLoader.getAppContext().getExternalFilesDir(null) + "/data";

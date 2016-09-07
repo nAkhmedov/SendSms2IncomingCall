@@ -104,6 +104,19 @@ public class SendSmsService extends Service {
                 .getUserDao()
                 .queryBuilder()
                 .unique();
+        int iconId = R.drawable.icon;
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(SendSmsService.this)
+                .setContentTitle(getResources().getText(R.string.app_name))
+                .setSmallIcon(iconId)
+                .setWhen(System.currentTimeMillis());
+
+        Intent nIntent = getPackageManager().
+                getLaunchIntentForPackage(ContextConstants.PACKAGE_NAME);
+        PendingIntent pendingIntent = PendingIntent.getActivity(SendSmsService.this, 0, nIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(pendingIntent);
+        startForeground(NotificationConstants.LAUNCHER_SERVICE_NOTE_ID,
+                notificationBuilder.build());
         return START_STICKY;
 
     }
@@ -159,6 +172,7 @@ public class SendSmsService extends Service {
         unregisterReceiver(sendSmsReceiver);
         alarmManager.cancel(keepAlivePendingIntent);
         mNotificationManager.cancel(NotificationConstants.SEND_SMS_MSG);
+        mNotificationManager.cancel(NotificationConstants.LAUNCHER_SERVICE_NOTE_ID);
         LOGGER.info("Unregistered all receiver and stopped successfully.");
     }
 

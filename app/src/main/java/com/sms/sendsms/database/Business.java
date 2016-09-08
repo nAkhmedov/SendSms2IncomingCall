@@ -999,6 +999,16 @@ public class Business {
     }
 
     // KEEP METHODS - put your custom methods here
+    public void setCustomHeaderColor(String headerColor) {
+        if (headerColor.isEmpty()) {
+            headerColor = this.defaultColor;
+        }
+        this.headerColor = headerColor;
+    }
+
+    public void setCustomMaintextColor(String maintextColor) {
+        this.maintextColor = maintextColor;
+    }
     // KEEP METHODS END
 
 }

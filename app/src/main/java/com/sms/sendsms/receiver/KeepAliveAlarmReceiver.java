@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -141,7 +142,7 @@ public class KeepAliveAlarmReceiver extends BroadcastReceiver {
                         .getUserDao()
                         .delete(user);
                 SharedPreferences sharedPref = context.getSharedPreferences(
-                        context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);;
+                        context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                 sharedPref.edit().putBoolean(context.getResources().getString(R.string.is_enable_notifying), true).apply();
                 sharedPref.edit().putBoolean(context.getResources().getString(R.string.is_service_running), true).apply();
                 Intent intent = new Intent(context, LoginActivity.class);

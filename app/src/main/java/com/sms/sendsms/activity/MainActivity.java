@@ -21,34 +21,20 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.sms.sendsms.ApplicationLoader;
 import com.sms.sendsms.R;
 import com.sms.sendsms.constants.ActionNames;
 import com.sms.sendsms.constants.ContextConstants;
 import com.sms.sendsms.database.User;
-import com.sms.sendsms.execution.CustomHTTPService;
 import com.sms.sendsms.service.SendSmsService;
-import com.sms.sendsms.util.LogCatDumpReader;
 import com.sms.sendsms.util.ReportHelper;
 import com.sms.sendsms.util.ServiceDetector;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Navruz on 29.03.2016.

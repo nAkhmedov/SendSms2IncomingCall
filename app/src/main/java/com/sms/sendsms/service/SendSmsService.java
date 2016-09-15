@@ -48,6 +48,8 @@ import java.util.List;
  */
 public class SendSmsService extends Service {
 
+    public static final String EXTRA_PHONE_NUMBER = "phone_number";
+
     private static Logger LOGGER = LoggerFactory.getLogger(SendSmsService.class);
 
     private static final String SMS_SENT = "com.sms.sendsms.SMS_SENT";
@@ -66,6 +68,7 @@ public class SendSmsService extends Service {
     private SharedPreferences prefs;
 
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -77,18 +80,17 @@ public class SendSmsService extends Service {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(SendSmsService.this);
 
-        LOGGER.info("registering incomingCallReceiver receiver");
-        LOGGER.info("registering receiver: SMS_SEND");
-        registerReceiver(sendSmsReceiver, new IntentFilter(SMS_SENT));
-        registerReceiver(incomingCallReceiver, new IntentFilter(
-                TelephonyManager.ACTION_PHONE_STATE_CHANGED));
-
         alarmManager = (AlarmManager) this
                 .getSystemService(Context.ALARM_SERVICE);
+
         telephony = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        LOGGER.info("registering receiver: SMS_SEND");
+        registerReceiver(sendSmsReceiver, new IntentFilter(SMS_SENT));
 
         Intent intent = new Intent(this, KeepAliveAlarmReceiver.class);
         keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, keepAlivePendingIntent);
 
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HALF_DAY,
@@ -117,8 +119,11 @@ public class SendSmsService extends Service {
         notificationBuilder.setContentIntent(pendingIntent);
         startForeground(NotificationConstants.LAUNCHER_SERVICE_NOTE_ID,
                 notificationBuilder.build());
-        return START_STICKY;
 
+        if(intent!=null && intent.hasExtra(EXTRA_PHONE_NUMBER)){
+            sendSms(intent.getStringExtra(EXTRA_PHONE_NUMBER), user.getMessageBody(), false);
+        }
+        return START_STICKY;
     }
 
     private BroadcastReceiver sendSmsReceiver = new BroadcastReceiver() {
@@ -168,7 +173,7 @@ public class SendSmsService extends Service {
         LOGGER.info("Service is onDestroy");
         sharedPref.edit().putBoolean(getString(R.string.is_service_running), false).apply();
         telephony.listen(phoneListener, PhoneStateListener.LISTEN_NONE);
-        unregisterReceiver(incomingCallReceiver);
+//        unregisterReceiver(incomingCallReceiver);
         unregisterReceiver(sendSmsReceiver);
         alarmManager.cancel(keepAlivePendingIntent);
         mNotificationManager.cancel(NotificationConstants.SEND_SMS_MSG);
@@ -185,8 +190,7 @@ public class SendSmsService extends Service {
     private BroadcastReceiver incomingCallReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LOGGER.info("IncomingCallReceiver is received.");
-            telephony.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+//            telephony.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
         }
     };
 
@@ -198,9 +202,10 @@ public class SendSmsService extends Service {
             if (state == mLastState) {
                 return;
             }
+
             if (state == TelephonyManager.CALL_STATE_RINGING) {
                 mLastState = state;
-                sendSms(incomingNumber, user.getMessageBody(), false);
+//                sendSms(incomingNumber, user.getMessageBody(), false);
             }
                     /*after finishing call state android returns CALL_STATE_IDLE*/
             if (state == TelephonyManager.CALL_STATE_IDLE) {
@@ -243,6 +248,7 @@ public class SendSmsService extends Service {
             mLastState = -1;
             return;
         }
+        
         if (!phoneNumber.startsWith(ContextConstants.PHONE_NUMBER_FORMAT_F) &&
                 !phoneNumber.startsWith(ContextConstants.PHONE_NUMBER_FORMAT_S)) {
             LOGGER.info("Failed: Number is not started 05 or +9725; phoneNumber = " + phoneNumber);
@@ -320,6 +326,7 @@ public class SendSmsService extends Service {
 
         smsManager.sendMultipartTextMessage(phoneNumber, null, parts, sentIntents, deliveryIntents);
     }
+
 }
 
 

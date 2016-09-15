@@ -58,11 +58,11 @@
             android:configChanges="orientation|screenSize">
         </activity>
 
-        <!--<receiver android:name=".receiver.IncomingCallReceiver" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.PHONE_STATE" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <receiver android:name=".receiver.IncomingCallReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
 
         <receiver android:name=".receiver.BootCompletedReceiver">
             <intent-filter>
@@ -73,8 +73,14 @@
         </receiver>
 
         <receiver android:name=".receiver.KeepAliveAlarmReceiver" />
+        <!--<receiver android:name=".service.SendSmsService$IncomingCallReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.PHONE_STATE"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <service android:name=".service.SendSmsService"/>
+
     </application>
 
 </manifest>

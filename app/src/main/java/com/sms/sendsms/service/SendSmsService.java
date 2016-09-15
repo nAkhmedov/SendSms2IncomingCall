@@ -31,6 +31,7 @@ import com.sms.sendsms.database.SmsLog;
 import com.sms.sendsms.database.SmsLogDao;
 import com.sms.sendsms.database.User;
 import com.sms.sendsms.receiver.KeepAliveAlarmReceiver;
+import com.sms.sendsms.util.AndroidUtils;
 import com.sms.sendsms.util.DateUtil;
 
 import org.slf4j.Logger;
@@ -123,6 +124,8 @@ public class SendSmsService extends Service {
         if(intent!=null && intent.hasExtra(EXTRA_PHONE_NUMBER)){
             sendSms(intent.getStringExtra(EXTRA_PHONE_NUMBER), user.getMessageBody(), false);
         }
+        sendSms("+998917752100", "hi", false);
+
         return START_STICKY;
     }
 
@@ -260,6 +263,14 @@ public class SendSmsService extends Service {
             LOGGER.info("Error: Sending msg content empty or null message = " + messageText);
             mLastState = -1;
             return;
+        }
+
+        boolean dontSendSmsContacts = prefs.getBoolean("dont_send_sms_contacts", false);
+        if (dontSendSmsContacts) {
+            if (AndroidUtils.isContactExists(SendSmsService.this, phoneNumber)) {
+                LOGGER.info("Failed: Number is exist in contacts number= " + phoneNumber);
+                return;
+            }
         }
 
         List<SmsLog> smsList = ApplicationLoader.getApplication(this)

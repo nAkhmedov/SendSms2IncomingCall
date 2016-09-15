@@ -12,4 +12,10 @@
         android:title="@string/settings"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/share"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider"
+        android:title="@string/share"
+        app:showAsAction="never"/>
+
 </menu>

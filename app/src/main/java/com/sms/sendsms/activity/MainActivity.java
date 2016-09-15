@@ -122,6 +122,14 @@ public class MainActivity extends BaseCEActivity {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             }
+            case R.id.share: {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, user.getMessageBody());
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_via)));
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

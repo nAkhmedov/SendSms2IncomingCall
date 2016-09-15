@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 
 import com.sms.sendsms.R;
 
@@ -29,8 +30,11 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         final ListPreference sendSmsPeriod = (ListPreference) findPreference("send_sms_period");
+        final SwitchPreference dontSendSmsContacts = (SwitchPreference) findPreference("dont_send_sms_contacts");
         String period = prefs.getString("send_sms_period", getString(R.string.everytime));
+        boolean dontSendContacts = prefs.getBoolean("dont_send_sms_contacts", false);
         sendSmsPeriod.setSummary(period);
+        dontSendSmsContacts.setChecked(dontSendContacts);
 
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {

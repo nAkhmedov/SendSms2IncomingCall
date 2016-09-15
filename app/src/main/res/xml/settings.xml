@@ -13,6 +13,10 @@
             android:defaultValue="@string/everytime"
             android:summary="@string/everytime"/>
 
+        <SwitchPreference
+            android:key="dont_send_sms_contacts"
+            android:title="@string/dont_send_sms_contacts"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

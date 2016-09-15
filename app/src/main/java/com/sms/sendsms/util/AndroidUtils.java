@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
@@ -110,5 +111,22 @@ public class AndroidUtils {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isContactExists(Context context, String number) {
+        if (number != null) {
+            Uri lookupUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+            String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
+            Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
+            try {
+                if (cur != null && cur.moveToFirst()) {
+                    return true;
+                }
+            } finally {
+                if (cur != null)
+                    cur.close();
+            }
+        }
+        return false;
     }
 }

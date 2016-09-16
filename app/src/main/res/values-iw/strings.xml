@@ -128,7 +128,7 @@
     <string name="report_send_successfully">הלוג נשלח. תודה על הפידבק.</string>
     <string name="report_send_failed">הלוג לא נשלח. בדוק את חיבור האינטרנט שלך.</string>
     <string name="please_wait">אנא המתן...</string>
-    <string name="dont_send_sms_contacts">Don\'t send SMS to existing contacts</string>
-    <string name="share">Share</string>
-    <string name="share_via">Share via</string>
+    <string name="dont_send_sms_contacts">התעלם מאנשי קשר קיימים</string>
+    <string name="share">שתף</string>
+    <string name="share_via">שתף באמצעות</string>
 </resources>

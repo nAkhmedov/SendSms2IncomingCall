@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -124,7 +125,6 @@ public class SendSmsService extends Service {
         if(intent!=null && intent.hasExtra(EXTRA_PHONE_NUMBER)){
             sendSms(intent.getStringExtra(EXTRA_PHONE_NUMBER), user.getMessageBody(), false);
         }
-        sendSms("+998917752100", "hi", false);
 
         return START_STICKY;
     }
@@ -235,7 +235,7 @@ public class SendSmsService extends Service {
         }
     }
 
-    private void sendSms(String phoneNumber,String messageText, boolean isBinary) {
+    private void sendSms(String phoneNumber, String messageText, boolean isBinary) {
         LOGGER.info("Sending sms to phoneNumber = " + phoneNumber);
         if (phoneNumber == null || phoneNumber.isEmpty()) {
             LOGGER.info("Failed: Couldn't sent message to number = " + phoneNumber);
@@ -319,7 +319,13 @@ public class SendSmsService extends Service {
 
         LOGGER.info("Sending probable success ");
         recipientNumber = phoneNumber;
-        SmsManager smsManager = SmsManager.getDefault();
+        SmsManager smsManager;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            int subId = SmsManager.getDefaultSmsSubscriptionId();
+            smsManager = SmsManager.getSmsManagerForSubscriptionId(subId);
+        } else {
+            smsManager = SmsManager.getDefault();
+        }
 
         PendingIntent piSend = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
         PendingIntent piDelivered = PendingIntent.getBroadcast(this, 0, new Intent(SMS_DELIVERED), 0);
